@@ -1,7 +1,8 @@
-const NLIN = 10;
-const NCOL = 20;
+const NLIN = 10;//Quantidade de linhas da matriz base
+const NCOL = 20;//Quantidade de colunas da matriz base
 const cor = "white";
-const x_y = 20;
+const x_y = 20;//Tamanho dos blocos da matriz base //Podemos mudar para Square ou quadrado essa const ?
+
 
 //Pegar a matriz principal pelo ID
 var canvas = document.getElementById('Matriz');
@@ -9,26 +10,13 @@ var canvas = document.getElementById('Matriz');
 var blocos = canvas.getContext("2d");
 var matriz = new Array(); // new Matriz();
 
-
-  for (linha = 0 ;linha < NLIN ; linha++){
+//Gerador da matriz base
+  for (linha = 0 ;linha < NLIN ; linha++){ //Gera 10 linhas
       matriz[linha]= [];
-      for(coluna = 0; coluna < NCOL ;coluna++){
+      for(coluna = 0; coluna < NCOL ;coluna++){//Gera 20 colunas
         matriz[linha][coluna] = "white";
       }
     }
-
-
-/*
-function criarMatriz() {
-
-    for (linha = 0; linha < NLIN; linha++) {
-//matrizprincipal[linha] = new Array();
-        for (coluna = 0; coluna < NCOL; coluna++) {
-            matrizprincipal[linha][coluna] = Branco;
-        }
-    }
-
-} */
 
 function mostrarMatriz() {
   for (linha = 0 ;linha < NLIN ; linha++){
@@ -37,15 +25,25 @@ function mostrarMatriz() {
         }
     }
 }
-    mostrarMatriz();
+mostrarMatriz(); //Chamando a funcao Mostrar matriz
 
+//Funcao que cria bloco na matriz
 function criarBlocosMatriz(linha, coluna, cor) {
-    blocos.fillStyle = cor ;
+    blocos.fillStyle = cor ; //Define a cor do bloco gerado
     blocos.fillRect(linha*x_y, coluna*x_y, x_y, x_y);
-    blocos.strokeStyle = 'black';
+    //Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+    blocos.strokeStyle = 'black'; //Define a cor das divisoes do bloco
     blocos.strokeRect(linha*x_y, coluna*x_y, x_y, x_y);
 }
 
+//Arthur fez aqui, nao sei se a mostrar matriz esta correta
+function EscreverMatriz(){
+    for (linha = 0; linha < NLIN;  linha++) {
+        for (coluna = 0; coluna < NCOL; coluna++) {
+            criarBlocosMatriz(NLIN, NCOL,matriz[linha][coluna]);
+        }
+    }
+}
 
 //criarBlocosMatriz(5,20,"blue"); //coluna e linha
 
@@ -60,16 +58,42 @@ var z = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
 
-
     for (linha = 0; linha < NLIN;  linha++) {
         for (coluna = 0; coluna < NCOL; coluna++) {
             if(z[linha][coluna] == 1){
-              criarBlocosMatriz(linha, coluna,"pink");
+              criarBlocosMatriz(linha, coluna,"red");
             }
         }
     }
 
+//FAZENDO ARTHUR -- CRIANDO A PECA EM FORMATO Z
 
+              //Z[0]                      Z[1] = posição girada 90 >    Z[2] posição girada 180 >  Z[3] posição girada 270 > 
+const Z = [ [ [1,1,0],[0,1,1],[0,0,0] ],  [ [0,0,1],[0,1,1],[0,1,0] ], [ [0,0,0],[1,1,0],[0,1,1] ], [ [0,1,0],[1,1,0][1,0,0] ] ];
+
+var Peca = new Peca (Z,"blue");//gerador a partir do protipo 
+
+//Criando um prototipo da funcao para fazer os varios tipos de blocos
+function Peca(Tetramino,cor){
+    this.Tetramino=Tetramino;
+    this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso z[0])
+    this.GoTetramino = this.Tetramino[this.TetraminoN]; //Vá bloco Z    = bloco [posicao0]
+    this.cor="blue";
+    this.linha=3;//posicao inicial do bloco
+    this.coluna=3;//posicao inicial acima da matriz principal (Para cair dps)
+
+    for (linha = 0; linha <this.GoTetramino.length;  linha++) {
+        for (coluna = 0; coluna < this.GoTetramino.length; coluna++) {
+            if(this.GoTetramino[linha][coluna]){
+                EscreverMatriz(linha,coluna,this.cor);
+            }
+        }
+    }
+
+}
+
+
+//FAZENDO ARTHUR -- CRIANDO A PECA EM FORMATO Z
 
 
 
