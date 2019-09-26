@@ -1,11 +1,9 @@
-const NLIN = 20;//Quantidade de linhas da matriL base
-const NCOL = 10;//Quantidade de colunas da matriL base
+var NCOL= prompt ("Digite a quantidade de linhas");//Quantidade de linhas da matriL base
+var NLIN= prompt ("Digite a quantidade de colunas");//Quantidade de colunas da matriL base
 const pixel = 20;//Tamanho dos blocos da matriL base //Podemos mudar para Square ou quadrado essa const ?
 
 var canvas = document.getElementById('MatriL');//Pegar a matriL principal pelo ID
 var blocos = canvas.getContext("2d");//Efeito 2d
-
-
 
 var base = []; //MatriL de base
 //Criando a MatriL base
@@ -35,27 +33,33 @@ mostrarMatriL();
 
 //FALENDO ARTHUR -- CRIANDO A PECA EM FORMATO L
 
-              //L[0]                      L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
-const L = [ [ [0,0,0],
-              [0,0,1],
-              [1,1,1] ],  
+              //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
+const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [1,0,0],[1,0,0][1,1,0]]];
+/*
+const l = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]];//L invertido
 
-            [ [1,1,0],
-              [1,0,0],
-              [1,0,0] ], 
+const O = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]]];//quadrado
 
-            [ [1,1,1],
-              [0,0,1],
-              [0,0,0] ],
+const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]];
 
-            [ [1,0,0],
-              [1,0,0]
-              [1,1,0] ] ];
+const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]];              
+
+const I = [ [ [1,0,0,0],[1,0,0,0],[1,0,0,0],[1,0,0,0]],
+            [ [1,1,1,1],[0,0,0,0],[0,0,0,0],[0,0,0,0]],
+            [ [0,0,0,1],[0,0,0,1],[0,0,0,1],[0,0,0,1]],
+              [0,0,0,0],[0,0,0,0],[0,0,0,0],[1,1,1,1]],
+
 //Cada 3 é uma linha do bloco
-
+*/
 var Peca = new Peca (L,"blue");//gerador a partir do protipo 
+/*
+var Peca = new Peca (l,"red");
+var Peca = new Peca (O,"brown");
+var Peca = new Peca (Y,"orange");
+var Peca = new Peca (U,"green");
+var Peca = new Peca (I,"yellow");
 //var Peca = new Peca (O,"black")
-
+*/
 var GoTetramino;
 //Criando um prototipo da funcao para faLer os varios tipos de blocos
 function Peca(Tetramino,cor){
