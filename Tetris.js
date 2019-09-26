@@ -64,8 +64,8 @@ function Peca(Tetramino,cor){
     this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
     this.GoTetramino = this.Tetramino[this.TetraminoN]; //Vá bloco L = bloco [posicao0]
     this.cor="blue";
-    this.linha=17;//posicao inicial do bloco
-    this.coluna=4;//posicao inicial acima da matriL principal (Para cair dps)
+    this.linha=NLIN-3;//posicao inicial do bloco
+    this.coluna=Math.floor((NCOL/2)-1);//posicao inicial acima da matriL principal (Para cair dps)
     //Geração das pecas na tela 
                     //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
     GoTetramino = this.GoTetramino;
@@ -99,8 +99,51 @@ function drawPiece(){
     }
 }
 
-function tickMovimentation() {
-    deletePiece();
-    linha_nova--;
-    drawPiece();
+function tickMovimentation() { //Função para a movimentação constante da peça
+    deletePiece(); //apagar peça antes de mover
+    linha_nova--; //sobe a peça
+    drawPiece(); //desenha a peça no lugar novo
+}
+
+document.onkeydown = function(event) { //função para detectar as setas do teclado que sao pressionadas
+    switch (event.keyCode) {
+       case 37: //se for a seta <
+            var arrow = 37;
+            arrowMovimentation(arrow);
+          break;
+       case 38: //se for a seta ^
+            arrow = 38;
+            arrowMovimentation(arrow);
+          break;
+       case 39: //se for a seta >
+            var arrow = 39;
+            arrowMovimentation(arrow);
+          break;
+       case 40: //se for a seta para baixo
+            alert('Down key pressed');
+          break;
+    }
+};
+
+function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da peça
+    if(arrow == 37)
+    {
+        deletePiece();
+        coluna_nova--;
+        drawPiece();
+    }
+    else
+    if(arrow == 39)
+    {
+        deletePiece();
+        coluna_nova++;
+        drawPiece();
+    }
+    else
+    if(arrow = 38)
+    {
+        deletePiece();
+        linha_nova--;
+        drawPiece();
+    }
 }
