@@ -34,8 +34,8 @@ mostrarMatriL();
 
 // Criando tamanho da matriz
 
-var linha = prompt ("Digite a quantidade de linhas");
-var coluna =prompt ("Digite a quantidade de colunas");
+var linhas = prompt ("Digite a quantidade de linhas");
+var colunas =prompt ("Digite a quantidade de colunas");
 alert("Criar uma matriz de " + linhas + " linhas por " + colunas + " colunas ");
 
 
