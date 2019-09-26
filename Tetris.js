@@ -34,38 +34,11 @@ mostrarMatriL();
 
 // Criando tamanho da matriz
 
-var linhas = prompt ("Digite a quantidade de linhas");
-var colunas =prompt ("Digite a quantidade de colunas");
+var linha = prompt ("Digite a quantidade de linhas");
+var coluna =prompt ("Digite a quantidade de colunas");
 alert("Criar uma matriz de " + linhas + " linhas por " + colunas + " colunas ");
 
-var matriz =[];
-for (var l = 0; l < linhas; l ++){
-matriz[l]= [];
-for( var c =0; c<colunas;c++){
-    matriz[l][c] = '';
-}
 
-}
-for(var L = 0; L< linhas; L++){
-    for(var C=0; C < colunas; C++){
-        matriz[L][C] = prompt ("Digite um valor para inserir na matriz ");
-    }
-}
-
-var valores = '';
-for (var L =0; L <linhas; L++){
-    for(var C = 0; C < colunas; C++){
-        if (C < colunas -1){
-            valores += matriz[L][C] + "\t\t";
-        }
-        else {
-            valores += matriz[L][C] + "\n";
-        }
-
-    }
-}
-
-alert("Conteúdo da matriz:\n" + valores);
 
 
 //FALENDO ARTHUR -- CRIANDO A PECA EM FORMATO L
