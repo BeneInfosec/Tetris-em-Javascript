@@ -5,6 +5,8 @@ const pixel = 20;//Tamanho dos blocos da matriz base //Podemos mudar para Square
 var canvas = document.getElementById('Matriz');//Pegar a matriz principal pelo ID
 var blocos = canvas.getContext("2d");//Efeito 2d
 
+
+
 var base = []; //Matriz de base
 
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera 20 linhas
