@@ -5,8 +5,6 @@ const pixel = 20;//Tamanho dos blocos da matriL base //Podemos mudar para Square
 var canvas = document.getElementById('MatriL');//Pegar a matriL principal pelo ID
 var blocos = canvas.getContext("2d");//Efeito 2d
 
-
-
 var base = []; //MatriL de base
 //Criando a MatriL base
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
@@ -32,29 +30,26 @@ function mostrarMatriL() {
 }   
 mostrarMatriL();
 
-
-//FALENDO ARTHUR -- CRIANDO A PECA EM FORMATO L
-
-              //L[0]                      L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
-const L = [ [ [0,0,0],
-              [0,0,1],
-              [1,1,1] ],  
-
-            [ [1,1,0],
-              [1,0,0],
-              [1,0,0] ], 
-
-            [ [1,1,1],
-              [0,0,1],
-              [0,0,0] ],
-
-            [ [1,0,0],
-              [1,0,0]
-              [1,1,0] ] ];
-//Cada 3 é uma linha do bloco
-
+//Declaração das pecas a partir da funcao e especificação de posicao
+              //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
+const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [1,0,0],[1,0,0][1,1,0]]];
 var Peca = new Peca (L,"blue");//gerador a partir do protipo 
-//var Peca = new Peca (O,"black")
+
+const l = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]];//L invertido
+var Peca = new Peca (l,"red");
+
+const O = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]]];//quadrado
+var Peca = new Peca (O,"brown");
+
+const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]];
+var Peca = new Peca (Y,"orange");
+
+const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]];              
+var Peca = new Peca (U,"green");
+
+const I = [ [ [1,0,0,0],[1,0,0,0],[1,0,0,0],[1,0,0,0]],[ [1,1,1,1],[0,0,0,0],[0,0,0,0],[0,0,0,0]],[ [0,0,0,1],[0,0,0,1],[0,0,0,1],[0,0,0,1]],[0,0,0,0],[0,0,0,0],[0,0,0,0],[1,1,1,1]];
+var Peca = new Peca (I,"yellow");
+
 
 var GoTetramino;
 //Criando um prototipo da funcao para faLer os varios tipos de blocos
