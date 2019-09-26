@@ -4,10 +4,11 @@ const pixel = 20;//Tamanho dos blocos da matriL base //Podemos mudar para Square
 
 var canvas = document.getElementById('MatriL');//Pegar a matriL principal pelo ID
 var blocos = canvas.getContext("2d");//Efeito 2d
-
-
-
+var intervalo = setInterval(tickMovimentation, 1000);
+var linha_nova = 0;
+var coluna_nova = 0;
 var base = []; //MatriL de base
+
 //Criando a MatriL base
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
     base[linha]= [];
@@ -63,18 +64,43 @@ function Peca(Tetramino,cor){
     this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
     this.GoTetramino = this.Tetramino[this.TetraminoN]; //Vá bloco L = bloco [posicao0]
     this.cor="blue";
-    this.linha=20;//posicao inicial do bloco
+    this.linha=17;//posicao inicial do bloco
     this.coluna=4;//posicao inicial acima da matriL principal (Para cair dps)
     //Geração das pecas na tela 
                     //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
-    for (linha = 0; (linha+this.linha) < (this.linha + this.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
-                    //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
-        for (coluna = 0; (coluna+ this.coluna) < (this.coluna +this.GoTetramino.length) ; coluna++) {
-            if(this.GoTetramino[linha][coluna] == 1){
-                blocos.fillStyle = "blue" ; //Define a cor do bloco gerado
-                blocos.fillRect((this.coluna+coluna)*pixel, (linha+this.linha)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                blocos.strokeRect((this.coluna+coluna)*pixel, (linha+this.linha)*pixel, pixel, pixel);
+    GoTetramino = this.GoTetramino;
+    linha_nova = this.linha;
+    coluna_nova = this.coluna;
+    drawPiece();    
+}
+function deletePiece(){
+    for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
+            if(GoTetramino[linha][coluna] == 1){
+                blocos.fillStyle = "white" ; //Define a cor do bloco gerado
+                blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
             }
         }
     }
+}
+
+function drawPiece(){
+    for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
+            if(GoTetramino[linha][coluna] == 1){
+                blocos.fillStyle = "blue" ; //Define a cor do bloco gerado
+                blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
+            }
+        }
+    }
+}
+
+function tickMovimentation() {
+    deletePiece();
+    linha_nova--;
+    drawPiece();
 }
