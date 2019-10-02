@@ -4,7 +4,7 @@ const pixel = 20;//Tamanho dos blocos da matriL base //Podemos mudar para Square
 
 var canvas = document.getElementById('MatriL');//Pegar a matriL principal pelo ID
 var blocos = canvas.getContext("2d");//Efeito 2d
-var intervalo = setInterval(tickMovimentation, 1000);
+var intervalo = setInterval(tickMovimentation, 500);
 var linha_nova = 0;
 var coluna_nova = 0;
 var base = []; //MatriL de base
@@ -32,7 +32,6 @@ function mostrarMatriL() {
     }
 }   
 mostrarMatriL();
-
 
 //FALENDO ARTHUR -- CRIANDO A PECA EM FORMATO L
 
@@ -69,6 +68,7 @@ function Peca(Tetramino,cor){
     //Geração das pecas na tela 
                     //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
     GoTetramino = this.GoTetramino;
+
     linha_nova = this.linha;
     coluna_nova = this.coluna;
     drawPiece();    
@@ -103,6 +103,7 @@ function tickMovimentation() { //Função para a movimentação constante da pe�
     deletePiece(); //apagar peça antes de mover
     linha_nova--; //sobe a peça
     drawPiece(); //desenha a peça no lugar novo
+    checkColision();
 }
 
 document.onkeydown = function(event) { //função para detectar as setas do teclado que sao pressionadas
@@ -144,6 +145,17 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
     {
         deletePiece();
         linha_nova--;
+        drawPiece();
+    }
+}
+
+function checkColision(){
+    var nextRow;
+    nextRow = linha_nova-1;
+    if(nextRow < -1)
+    {
+        linha_nova = NLIN-3;
+        coluna_nova = Math.floor((NCOL/2)-1);
         drawPiece();
     }
 }
