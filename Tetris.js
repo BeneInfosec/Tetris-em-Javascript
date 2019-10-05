@@ -1,26 +1,25 @@
 const NLIN = 20;//Quantidade de linhas da matriL base
 const NCOL = 10;//Quantidade de colunas da matriL base
 const pixel = 20;//Tamanho dos blocos da matriL base //Podemos mudar para Square ou quadrado essa const ?
-
+const EMPTY_SQ = "WHITE";
 var canvas = document.getElementById('MatriL');//Pegar a matriL principal pelo ID
 var blocos = canvas.getContext("2d");//Efeito 2d
 var intervalo = setInterval(tickMovimentation, 500);
-var linha_nova = 0;
-var coluna_nova = 0;
 var base = []; //MatriL de base
-
+var linha_nova=0;
+var coluna_nova=0;
 //Criando a MatriL base
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
     base[linha]= [];
     for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
-        base[linha][coluna] = 0;
+        base[linha][coluna] = EMPTY_SQ;
     }
 }
 
 function criarBlocosMatriL(linha, coluna, cor) {
-    blocos.fillStyle = "white" ;
+    blocos.fillStyle = EMPTY_SQ ;
     blocos.fillRect(linha*pixel, coluna*pixel, pixel, pixel);
-    blocos.strokeStyle = 'black';
+    blocos.strokeStyle = "BLACK";
     blocos.strokeRect(linha*pixel, coluna*pixel, pixel, pixel);
 }
 
@@ -68,17 +67,17 @@ function Peca(Tetramino,cor){
     //Geração das pecas na tela 
                     //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
     GoTetramino = this.GoTetramino;
-
     linha_nova = this.linha;
     coluna_nova = this.coluna;
     drawPiece();    
 }
+
 function deletePiece(){
     for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
         for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
-            if(GoTetramino[linha][coluna] == 1){
-                blocos.fillStyle = "white" ; //Define a cor do bloco gerado
+            if(Peca.GoTetramino[linha][coluna] == 1){
+                blocos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
                 blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
                 blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
             }
@@ -100,10 +99,16 @@ function drawPiece(){
 }
 
 function tickMovimentation() { //Função para a movimentação constante da peça
-    deletePiece(); //apagar peça antes de mover
-    linha_nova--; //sobe a peça
-    drawPiece(); //desenha a peça no lugar novo
-    checkColision();
+    if(checkColision(-1, 0)){
+        drawPieceOnBoard();
+        linha_nova = Peca.linha;
+        coluna_nova = Peca.coluna;
+    }
+    else{
+        deletePiece(); //apagar peça antes de mover
+        linha_nova--; //sobe a peça
+        drawPiece(); //desenha a peça no lugar novo
+    }
 }
 
 document.onkeydown = function(event) { //função para detectar as setas do teclado que sao pressionadas
@@ -129,33 +134,77 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
 function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da peça
     if(arrow == 37)
     {
-        deletePiece();
-        coluna_nova--;
-        drawPiece();
+        if(checkColision(0, -1)){
+            return false;
+        }
+        else{
+            deletePiece();
+            coluna_nova--;
+            drawPiece();
+        }
     }
     else
     if(arrow == 39)
     {
-        deletePiece();
-        coluna_nova++;
-        drawPiece();
+        if(checkColision(0, 1)){
+            return false;
+        }
+        else{
+            deletePiece();
+            coluna_nova++;
+            drawPiece();
+        }
     }
     else
     if(arrow = 38)
     {
-        deletePiece();
-        linha_nova--;
-        drawPiece();
+        if(checkColision(-1, 0)){
+            drawPieceOnBoard();
+            return false;
+        }
+        else{
+            deletePiece();
+            linha_nova--;
+            drawPiece();
+        }
     }
 }
 
-function checkColision(){
-    var nextRow;
-    nextRow = linha_nova-1;
-    if(nextRow < -1)
-    {
-        linha_nova = NLIN-3;
-        coluna_nova = Math.floor((NCOL/2)-1);
-        drawPiece();
+function checkColision(r, c){
+    for(linha = 0 ; linha < GoTetramino.length ; linha++){
+        for(coluna = 0 ; coluna < GoTetramino.length ; coluna++){
+            if(GoTetramino[linha][coluna] != 0){
+                let nextRow;
+                let nextCol;
+                nextRow = linha + r + linha_nova;
+                nextCol = coluna + c + coluna_nova;
+                if(nextRow < 0 || nextCol < 0 || nextCol > NCOL){
+                    return true;
+                }
+                if(base[nextRow][nextCol] != EMPTY_SQ){
+                    return true;
+                }
+                else{
+                    continue;
+                }
+            }
+            else{
+                continue;
+            }
+        }
+    }
+    return false;
+}
+
+function drawPieceOnBoard(){
+    for(linha = 0 ; linha < GoTetramino.length ; linha++){
+        for(coluna = 0 ; coluna < GoTetramino.length ; coluna++){
+            if(GoTetramino[linha][coluna] == 1){
+                base[linha+linha_nova][coluna+coluna_nova] = "blue";
+                blocos.fillStyle = "blue" ; //Define a cor do bloco gerado
+                blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
+            }
+        }
     }
 }
