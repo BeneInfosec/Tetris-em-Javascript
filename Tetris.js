@@ -1,7 +1,9 @@
-var NCOL= prompt ("Digite a quantidade de linhas");//Quantidade de linhas da matriL base
-var NLIN= prompt ("Digite a quantidade de colunas");//Quantidade de colunas da matriL base
+var NCOL= prompt ("Digite a largura do tabuleiro");//Quantidade de colunas da matriL base
+var NLIN= prompt ("Digite a altura do tabuleiro");//Quantidade de linhas da matriL base
+
 const pixel = 20;//Tamanho dos blocos da matriL base //Podemos mudar para Square ou quadrado essa const ?
 const EMPTY_SQ = "WHITE";
+
 var canvas = document.getElementById('MatriL');//Pegar a matriL principal pelo ID
 var blocos = canvas.getContext("2d");//Efeito 2d
 var intervalo = setInterval(tickMovimentation, 500);
@@ -70,6 +72,7 @@ function Peca(Tetramino,cor){
     this.cor="blue";
     this.linha=NLIN-3;//posicao inicial do bloco
     this.coluna=Math.floor((NCOL/2)-1);//posicao inicial acima da matriL principal (Para cair dps)
+    alert(this.linha);
     //Geração das pecas na tela 
                     //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
     GoTetramino = this.GoTetramino;
