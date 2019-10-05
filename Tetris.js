@@ -10,6 +10,8 @@ var intervalo = setInterval(tickMovimentation, 500);
 var base = []; //MatriL de base
 var linha_nova=0;
 var coluna_nova=0;
+
+
 //Criando a MatriL base
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
     base[linha]= [];
@@ -72,7 +74,6 @@ function Peca(Tetramino,cor){
     this.cor="blue";
     this.linha=NLIN-3;//posicao inicial do bloco
     this.coluna=Math.floor((NCOL/2)-1);//posicao inicial acima da matriL principal (Para cair dps)
-    alert(this.linha);
     //Geração das pecas na tela 
                     //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
     GoTetramino = this.GoTetramino;
@@ -85,7 +86,7 @@ function deletePiece(){
     for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
         for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
-            if(Peca.GoTetramino[linha][coluna] == 1){
+            if(GoTetramino[linha][coluna] == 1){
                 blocos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
                 blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
                 blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
@@ -108,10 +109,12 @@ function drawPiece(){
 }
 
 function tickMovimentation() { //Função para a movimentação constante da peça
-    if(checkColision(-1, 0)){
+    if(checkColision(-1, 0, GoTetramino)){
         drawPieceOnBoard();
         linha_nova = Peca.linha;
         coluna_nova = Peca.coluna;
+        Peca.TetraminoN = 0;
+        GoTetramino = Peca.Tetramino[Peca.TetraminoN];
     }
     else{
         deletePiece(); //apagar peça antes de mover
@@ -135,7 +138,7 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
             arrowMovimentation(arrow);
           break;
        case 40: //se for a seta para baixo
-            alert('Down key pressed');
+            rotatePiece();
           break;
     }
 };
@@ -143,7 +146,7 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
 function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da peça
     if(arrow == 37)
     {
-        if(checkColision(0, -1)){
+        if(checkColision(0, -1, GoTetramino)){
             return false;
         }
         else{
@@ -155,7 +158,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
     else
     if(arrow == 39)
     {
-        if(checkColision(0, 1)){
+        if(checkColision(0, 1, GoTetramino)){
             return false;
         }
         else{
@@ -167,8 +170,12 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
     else
     if(arrow = 38)
     {
-        if(checkColision(-1, 0)){
+        if(checkColision(-1, 0, GoTetramino)){
             drawPieceOnBoard();
+            linha_nova = Peca.linha;
+            coluna_nova = Peca.coluna;
+            Peca.TetraminoN = 0;
+            GoTetramino = Peca.Tetramino[Peca.TetraminoN];
             return false;
         }
         else{
@@ -179,10 +186,10 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
     }
 }
 
-function checkColision(r, c){
+function checkColision(r, c, futurePiece){
     for(linha = 0 ; linha < GoTetramino.length ; linha++){
         for(coluna = 0 ; coluna < GoTetramino.length ; coluna++){
-            if(GoTetramino[linha][coluna] != 0){
+            if(futurePiece[linha][coluna] != 0){
                 let nextRow;
                 let nextCol;
                 nextRow = linha + r + linha_nova;
@@ -215,5 +222,27 @@ function drawPieceOnBoard(){
                 blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
             }
         }
+    }
+}
+
+function rotatePiece(){
+    let futureN = Peca.TetraminoN;
+    let futureTetramino = GoTetramino;
+    if(futureN == 2){
+        futureN = 0;
+        futureTetramino = Peca.Tetramino[futureN];
+    }
+    else{
+        futureN++;
+        futureTetramino = Peca.Tetramino[futureN];
+    }
+    if(checkColision(0, 0, futureTetramino)){
+        return false;
+    }
+    else{
+        deletePiece();
+        Peca.TetraminoN = futureN;
+        GoTetramino = futureTetramino;
+        drawPiece();
     }
 }
