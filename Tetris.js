@@ -157,12 +157,11 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
         else //se nao for a ultima posicao da peca 
         {
             deletePiece();
+            Peca.GoTetramino = Peca.Tetramino
             Peca.Tetramino[Peca.TetraminoN++];
-            //Peca(Peca.Tetramino,Peca.cor);
-            //Ele pega o valor certo em peca, porem nao atualiza na escrita na matriz 
 
-            //this.Tetramino[this.TetraminoN++]; //Vá bloco L = bloco [posicao0]
             alert("Tetramino" + "[ " +Peca.TetraminoN);
+            alert("Peca.Tetramino");
             drawPiece();
         }
     }
