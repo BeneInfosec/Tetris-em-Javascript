@@ -37,8 +37,8 @@ function mostrarMatriL() {
 mostrarMatriL();
 
 //Declaração das pecas a partir da funcao e especificação de posicao
-//            L[0] = Posição inicial    L[1] = posição girada 90 > L[2] posição girada 180 >  L[3] posição girada 270 > 
-const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [1,0,0],[1,0,0],[1,1,0]]];
+//             L[0] = posição inicial  L[1] = posição girada 90 >  L[2] posição girada 180 >  L[3] posição girada 270 > 
+const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,0,0],[1,0,0],[1,1,0]],[ [1,1,1],[1,0,0],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]]];
 const l = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]];//L invertido
 const O = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]]];//quadrado
 const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]];
@@ -56,7 +56,7 @@ const Pecas = [
     [I,"yellow"]
 ];
               
-var Peca = new Peca (I,"blue");//gerador a partir do protipo 
+var Peca = new Peca (l,"blue");//gerador a partir do protipo 
 var GoTetramino;
 //Criando um prototipo da funcao para faLer os varios tipos de blocos
 function Peca(Tetramino,cor){
@@ -179,7 +179,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
     }
     if(arrow == 40) //Funcao para girar a peca
     {
-        if (Peca.TetraminoN > 2)//reseta o vetor 
+        if (Peca.TetraminoN > 3)//reseta o vetor 
         {
             Peca.TetraminoN =0;
         }
