@@ -44,7 +44,7 @@ const M = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1
 
 const N = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]]; //L invertido
 
-const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[1,1,1,1],[0,0,0,0]],[ [0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[1,1,1,1],[0,0,0,0]]]; // |
+const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,0,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],[ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,0,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]]]; // |
 
 const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]]; // _|_
 
@@ -102,7 +102,7 @@ function Peca(Tetramino,cor){
     this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
     this.GoTetramino = this.Tetramino[this.TetraminoN]; //Vá bloco L = bloco [posicao0]
     this.cor=cor;
-    this.linha=NLIN-3;//posicao inicial do bloco
+    this.linha=NLIN-4;//posicao inicial do bloco
     this.coluna=Math.floor((NCOL/2)-1);//posicao inicial acima da matriL principal (Para cair dps)
     //Geração das pecas na tela 
                     //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
@@ -221,16 +221,10 @@ function checkColision(r, c, futurePiece){
                 nextRow = linha + r + linha_nova;
                 nextCol = coluna + c + coluna_nova;
                 if(nextRow < 0 || nextCol < 0 || nextCol > NCOL){
-                    
                     return true;
-
-                    
-
                 }
                 if(base[nextRow][nextCol] != EMPTY_SQ){
                     return true;
-                    
-
                 }
                 else{
                     continue;
