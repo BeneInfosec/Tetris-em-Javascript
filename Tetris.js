@@ -44,7 +44,7 @@ const M = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1
 
 const N = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]]; //L invertido
 
-const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,0,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],[ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,0,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]]]; // |
+const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]],[ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]]; // |
 
 const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]]; // _|_
 
@@ -102,7 +102,10 @@ function Peca(Tetramino,cor){
     this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
     this.GoTetramino = this.Tetramino[this.TetraminoN]; //Vá bloco L = bloco [posicao0]
     this.cor=cor;
-    this.linha=NLIN-4;//posicao inicial do bloco
+    if(Tetramino == O) 
+    this.linha=NLIN-4;//posicao inicial do bloco O
+    else
+    this.linha = NLIN-3;//posição inicial dos outros blocos
     this.coluna=Math.floor((NCOL/2)-1);//posicao inicial acima da matriL principal (Para cair dps)
     //Geração das pecas na tela 
                     //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
@@ -248,8 +251,56 @@ function drawPieceOnBoard(){
                 blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
             }
         }
+       
+    }
+   verificalinha();
+    
+}
+
+function verificalinha(){
+  var contador = 0;
+
+    for(linha = 0 ; linha < NLIN ; linha++){
+        for(coluna = 0 ; coluna < NCOL ; coluna++){
+           contador++;
+           alert("Contador:" + contador + " Linha:" + linha + " Coluna:" + coluna + "NCOL: " + NCOL);
+           if ((contador) == (NCOL) && (NCOL - 1) == coluna) { //saber o final da 1 linha com NCOL
+                for(li = 0; li <= linha; li++){
+                  for(coluna = 0 ;coluna < NCOL; coluna++){
+                    alert(" Linhabla:"+li+" Colunabla:" + coluna);
+                      if(base[li][coluna] != EMPTY_SQ)
+                        alert(base[li][coluna]);
+                  }
+                }
+                //base[linha+linha_nova][coluna+coluna_nova] = cor;
+               // blocos.fillStyle = cor ; //Define a cor do bloco gerado
+               // blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+               // blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
+              
+            }
+        } 
+            contador = 0; 
+    }
+          //contador = 0;  
+}
+
+           
+//}
+    
+
+/*
+function verificalinha(){
+    for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
+      for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
+        if(base[0][1] != EMPTY_SQ){
+          base[0][1] = "white";
+          }
+        }
+        
     }
 }
+
+*/
 
 function rotatePiece(){
     let futureN = TetraminoN;
