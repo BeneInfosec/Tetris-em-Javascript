@@ -258,49 +258,28 @@ function drawPieceOnBoard(){
 }
 
 function verificalinha(){
+
   var contador = 0;
 
     for(linha = 0 ; linha < NLIN ; linha++){
-        for(coluna = 0 ; coluna < NCOL ; coluna++){
-           contador++;
-           alert("Contador:" + contador + " Linha:" + linha + " Coluna:" + coluna + "NCOL: " + NCOL);
-           if ((contador) == (NCOL) && (NCOL - 1) == coluna) { //saber o final da 1 linha com NCOL
-                for(li = 0; li <= linha; li++){
-                  for(coluna = 0 ;coluna < NCOL; coluna++){
-                    alert(" Linhabla:"+li+" Colunabla:" + coluna);
-                      if(base[li][coluna] != EMPTY_SQ)
-                        alert(base[li][coluna]);
-                  }
-                }
-                //base[linha+linha_nova][coluna+coluna_nova] = cor;
-               // blocos.fillStyle = cor ; //Define a cor do bloco gerado
-               // blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-               // blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
-              
-            }
-        } 
+        for(coluna = 0 ; coluna < NCOL ; coluna++){ //percorre a matriz base inteira
+                      if(base[linha][coluna] != EMPTY_SQ){ //verifica se é diferente de vazio
+                        contador++;
+                      }
+        }
+        if(contador == NCOL){ // compara se a linha inteira está preenchida
+          for(col = 0; col < NCOL; col ++){  // se foi preenchida
+            base[linha][col] = EMPTY_SQ; // coloca as colunas em branco
+            blocos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
+            blocos.fillRect(col*pixel, linha*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+            blocos.strokeRect(col*pixel, linha*pixel, pixel, pixel);
+        }
             contador = 0; 
-    }
-          //contador = 0;  
-}
-
-           
-//}
-    
-
-/*
-function verificalinha(){
-    for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
-      for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
-        if(base[0][1] != EMPTY_SQ){
-          base[0][1] = "white";
+        }else{
+            contador = 0; 
           }
         }
-        
-    }
-}
-
-*/
+  } 
 
 function rotatePiece(){
     let futureN = TetraminoN;
