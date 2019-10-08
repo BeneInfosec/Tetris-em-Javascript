@@ -57,8 +57,9 @@ const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1
 
 
 function peca_aleatoria(){ //função para gerar peça aleatoria
-  
-  switch((Math.floor(Math.random()*6)+1)){
+  var random = (Math.floor(Math.random()*6)+1);
+
+  switch(random){
     case 1:
       this.cor = "blue"
       this.Tetramino = L;
@@ -274,12 +275,28 @@ function verificalinha(){
             blocos.fillRect(col*pixel, linha*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
             blocos.strokeRect(col*pixel, linha*pixel, pixel, pixel);
         }
-            contador = 0; 
+            contador = 0;
+              move_tetraminos(linha, NCOL);
+              linha--;
         }else{
             contador = 0; 
           }
+      //alert("Entrou: " + linha);
+    }
+} 
+
+function move_tetraminos(linha, NCOL){
+       for(linha = 1; linha < NLIN; linha++){
+            for(col = 0; col < NCOL; col ++){  // se foi preenchida
+              base[linha-1][col] = base[linha][col]; // coloca as colunas em branco
+              blocos.fillStyle = base[linha][col]; //Define a cor do bloco gerado
+              blocos.fillRect(col*pixel, (linha-1)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+              blocos.strokeRect(col*pixel, (linha-1)*pixel, pixel, pixel);
         }
-  } 
+      }
+
+
+}
 
 function rotatePiece(){
     let futureN = TetraminoN;
