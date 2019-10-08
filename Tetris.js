@@ -50,12 +50,6 @@ const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1
 
 const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]]; //U             
 
-
-
-
-
-
-
 function peca_aleatoria(){ //função para gerar peça aleatoria
   var random = (Math.floor(Math.random()*6)+1);
 
@@ -260,43 +254,30 @@ function drawPieceOnBoard(){
 
 function verificalinha(){
 
-  var contador = 0;
-
+    var contador = 0;
     for(linha = 0 ; linha < NLIN ; linha++){
         for(coluna = 0 ; coluna < NCOL ; coluna++){ //percorre a matriz base inteira
-                      if(base[linha][coluna] != EMPTY_SQ){ //verifica se é diferente de vazio
-                        contador++;
-                      }
+            if(base[linha][coluna] != EMPTY_SQ){ //verifica se é diferente de vazio
+                contador++;
+            }
         }
         if(contador == NCOL){ // compara se a linha inteira está preenchida
-          for(col = 0; col < NCOL; col ++){  // se foi preenchida
-            base[linha][col] = EMPTY_SQ; // coloca as colunas em branco
-            blocos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
-            blocos.fillRect(col*pixel, linha*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-            blocos.strokeRect(col*pixel, linha*pixel, pixel, pixel);
-        }
+            for(lin = linha; lin < NLIN-1; lin++){
+                for(col = 0; col < NCOL; col ++){  // se foi preenchida
+                  base[lin][col] = base[lin+1][col]; // coloca as colunas em branco
+                  blocos.fillStyle = base[lin][col]; //Define a cor do bloco gerado
+                  blocos.fillRect(col*pixel, (lin)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                  blocos.strokeRect(col*pixel, (lin)*pixel, pixel, pixel);
+                }
+            }
             contador = 0;
-              move_tetraminos(linha, NCOL);
-              linha--;
-        }else{
+            linha--;
+        }
+        else{
             contador = 0; 
-          }
-      //alert("Entrou: " + linha);
+        }
     }
 } 
-
-function move_tetraminos(linha, NCOL){
-       for(linha = 1; linha < NLIN; linha++){
-            for(col = 0; col < NCOL; col ++){  // se foi preenchida
-              base[linha-1][col] = base[linha][col]; // coloca as colunas em branco
-              blocos.fillStyle = base[linha][col]; //Define a cor do bloco gerado
-              blocos.fillRect(col*pixel, (linha-1)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-              blocos.strokeRect(col*pixel, (linha-1)*pixel, pixel, pixel);
-        }
-      }
-
-
-}
 
 function rotatePiece(){
     let futureN = TetraminoN;
