@@ -12,7 +12,7 @@ var linha_nova=0;
 var coluna_nova=0;
 
 
-//Criando a MatriL base
+//Criando a Matriz base
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
     base[linha]= [];
     for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
@@ -102,12 +102,10 @@ function Peca(Tetramino,cor){
     else
     this.linha = NLIN-3;//posição inicial dos outros blocos
     this.coluna=Math.floor((NCOL/2)-1);//posicao inicial acima da matriL principal (Para cair dps)
-    //Geração das pecas na tela 
-                    //(linha+linhaInicial) < (LinhaInicial+TamanhoDaPeca)
     GoTetramino = this.GoTetramino;
     linha_nova = this.linha;
     coluna_nova = this.coluna;
-    drawPiece();    
+    drawPiece();
 }
 
 function deletePiece(){
@@ -123,7 +121,7 @@ function deletePiece(){
     }
 }
 
-function drawPiece(){
+function drawPiece(cor){
     for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
         for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
@@ -194,7 +192,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
         }
     }
     else
-    if(arrow = 38)
+    if(arrow == 38)
     {
         if(checkColision(-1, 0, GoTetramino)){
             drawPieceOnBoard();
@@ -205,6 +203,23 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
         else{
             deletePiece();
             linha_nova--;
+            drawPiece();
+        }
+    }
+    if(arrow == 40) //Funcao para girar a peca
+    {
+        if (Peca.TetraminoN > 3)//reseta o vetor 
+        {
+            Peca.TetraminoN =0;
+        }
+        else //se nao for a ultima posicao da peca 
+        {
+            deletePiece();
+            Peca.GoTetramino = Peca.Tetramino
+            Peca.Tetramino[Peca.TetraminoN++];
+
+            alert("Tetramino" + "[ " +Peca.TetraminoN);
+            alert("Peca.Tetramino");
             drawPiece();
         }
     }
