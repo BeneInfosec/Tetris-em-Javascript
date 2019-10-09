@@ -2,7 +2,9 @@ body {
        background-image: url("imagemFundo.jpg");
        height: 100%;
        width: 80%;
+       margin-right: 10%;
        margin-left: 10%;
+       margin-right: 10%;
      }
 
 header {
@@ -17,5 +19,14 @@ header {
       font-family: "cornerstone";
       text-align: center;
       font-style: italic;
+      position: absolute;
+      top: auto;
+      left: 40%;
+      
       }
-
+canvas{
+      position: absolute;
+      top: 15%;
+      left: 40%;
+      
+}
