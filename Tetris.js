@@ -6,7 +6,7 @@ const EMPTY_SQ = "WHITE";
 
 var canvas = document.getElementById('MatriL');//Pegar a matriL principal pelo ID
 var blocos = canvas.getContext("2d");//Efeito 2d
-var intervalo = setInterval(tickMovimentation, 500);
+var intervalo = setInterval(tickMovimentation, 1000);
 var base = []; //MatriL de base
 var linha_nova=0;
 var coluna_nova=0;
@@ -36,35 +36,71 @@ function mostrarMatriL() {
 }   
 mostrarMatriL();
 
-//Declaração das pecas a partir da funcao e especificação de posicao
-//             L[0] = posição inicial  L[1] = posição girada 90 >  L[2] posição girada 180 >  L[3] posição girada 270 > 
-const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,0,0],[1,0,0],[1,1,0]],[ [1,1,1],[1,0,0],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]]];
-const l = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]];//L invertido
-const O = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]]];//quadrado
-const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]];
-const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]];              
-const I = [ [ [1,0,0,0],[1,0,0,0],[1,0,0,0],[1,0,0,0]],[ [1,1,1,1],[0,0,0,0],[0,0,0,0],[0,0,0,0]],[ [0,0,0,1],[0,0,0,1],[0,0,0,1],[0,0,0,1]],[ [0,0,0,0],[0,0,0,0],[0,0,0,0],[1,1,1,1]]];
+             //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
 
+const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,0,0],[1,0,0],[1,1,0]],[ [1,1,1],[1,0,0],[0,0,0]],[ [0,1,1],[0,0,1],[0,0,1]]]; //L normal
 
-//Vetor de vetores das pecas
-const Pecas = [
-    [L,"blue"],
-    [l,"red"],
-    [O,"brown"],
-    [Y,"orange"],
-    [U,"green"],
-    [I,"yellow"]
-];
-              
-var Peca = new Peca (l,"blue");//gerador a partir do protipo 
-var GoTetramino;
+const M = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]]]; //quadrado
+
+const N = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]]; //L invertido
+
+const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]],[ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]]; // |
+
+const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]]; // _|_
+
+const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]]; //U             
+
+function peca_aleatoria(){ //função para gerar peça aleatoria
+  var random = (Math.floor(Math.random()*6)+1);
+
+  switch(random){
+    case 1:
+      this.cor = "blue"
+      this.Tetramino = L;
+      Peca(Tetramino,cor);
+      break;
+    case 2:
+      this.cor = "red"
+      this.Tetramino = M;
+      Peca(Tetramino,cor);
+      break;
+    case 3:
+      this.cor = "green"
+      this.Tetramino = N;
+      Peca(Tetramino,cor);
+    break;
+    case 4:
+      this.cor = "Gold"
+      this.Tetramino = O;
+      Peca(Tetramino,cor);
+    break;
+    case 5:
+      this.cor = "DeepPink"
+      this.Tetramino = Y;
+      Peca(Tetramino,cor);
+    break;
+    case 6:
+      this.cor = "purple"
+      this.Tetramino = U;
+      Peca(Tetramino,cor);
+    break;
+  }
+}
+
+peca_aleatoria(); //chamar peça aleatoria pela primeira vez
+
+var GoTetramino; //acho q nem precisa disso aqui
 //Criando um prototipo da funcao para faLer os varios tipos de blocos
+
 function Peca(Tetramino,cor){
     this.Tetramino=Tetramino;
     this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
     this.GoTetramino = this.Tetramino[this.TetraminoN]; //Vá bloco L = bloco [posicao0]
-    this.cor="blue";
-    this.linha=NLIN-3;//posicao inicial do bloco
+    this.cor=cor;
+    if(Tetramino == O) 
+    this.linha=NLIN-4;//posicao inicial do bloco O
+    else
+    this.linha = NLIN-3;//posição inicial dos outros blocos
     this.coluna=Math.floor((NCOL/2)-1);//posicao inicial acima da matriL principal (Para cair dps)
     GoTetramino = this.GoTetramino;
     linha_nova = this.linha;
@@ -85,15 +121,12 @@ function deletePiece(){
     }
 }
 
-function drawPiece(cor){
+function drawPiece(){
     for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
         for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
             if(GoTetramino[linha][coluna] == 1){
-                blocos.fillStyle = "blue" ; //Define a cor do bloco gerado
-
-                //Peca.Tetramino[Peca.TetraminoN];
-
+                blocos.fillStyle = cor ; //Define a cor do bloco gerado
                 blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
                 blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
             }
@@ -104,10 +137,8 @@ function drawPiece(cor){
 function tickMovimentation() { //Função para a movimentação constante da peça
     if(checkColision(-1, 0, GoTetramino)){
         drawPieceOnBoard();
-        linha_nova = Peca.linha;
-        coluna_nova = Peca.coluna;
-        Peca.TetraminoN = 0;
-        GoTetramino = Peca.Tetramino[Peca.TetraminoN];
+        peca_aleatoria();
+       
     }
     else{
         deletePiece(); //apagar peça antes de mover
@@ -165,11 +196,9 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
     {
         if(checkColision(-1, 0, GoTetramino)){
             drawPieceOnBoard();
-            linha_nova = Peca.linha;
-            coluna_nova = Peca.coluna;
-            Peca.TetraminoN = 0;
-            GoTetramino = Peca.Tetramino[Peca.TetraminoN];
+            peca_aleatoria();
             return false;
+
         }
         else{
             deletePiece();
@@ -226,32 +255,62 @@ function drawPieceOnBoard(){
     for(linha = 0 ; linha < GoTetramino.length ; linha++){
         for(coluna = 0 ; coluna < GoTetramino.length ; coluna++){
             if(GoTetramino[linha][coluna] == 1){
-                base[linha+linha_nova][coluna+coluna_nova] = "blue";
-                blocos.fillStyle = "blue" ; //Define a cor do bloco gerado
+                base[linha+linha_nova][coluna+coluna_nova] = cor;
+                blocos.fillStyle = cor ; //Define a cor do bloco gerado
                 blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
                 blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
             }
         }
+       
     }
+   verificalinha();
+    
 }
 
+function verificalinha(){
+
+    var contador = 0;
+    for(linha = 0 ; linha < NLIN ; linha++){
+        for(coluna = 0 ; coluna < NCOL ; coluna++){ //percorre a matriz base inteira
+            if(base[linha][coluna] != EMPTY_SQ){ //verifica se é diferente de vazio
+                contador++;
+            }
+        }
+        if(contador == NCOL){ // compara se a linha inteira está preenchida
+            for(lin = linha; lin < NLIN-1; lin++){
+                for(col = 0; col < NCOL; col ++){  // se foi preenchida
+                  base[lin][col] = base[lin+1][col]; // coloca as colunas em branco
+                  blocos.fillStyle = base[lin][col]; //Define a cor do bloco gerado
+                  blocos.fillRect(col*pixel, (lin)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                  blocos.strokeRect(col*pixel, (lin)*pixel, pixel, pixel);
+                }
+            }
+            contador = 0;
+            linha--;
+        }
+        else{
+            contador = 0; 
+        }
+    }
+} 
+
 function rotatePiece(){
-    let futureN = Peca.TetraminoN;
+    let futureN = TetraminoN;
     let futureTetramino = GoTetramino;
     if(futureN == 3){
         futureN = 0;
-        futureTetramino = Peca.Tetramino[futureN];
+        futureTetramino = Tetramino[futureN];
     }
     else{
         futureN++;
-        futureTetramino = Peca.Tetramino[futureN];
+        futureTetramino = Tetramino[futureN];
     }
     if(checkColision(0, 0, futureTetramino)){
         return false;
     }
     else{
         deletePiece();
-        Peca.TetraminoN = futureN;
+        TetraminoN = futureN;
         GoTetramino = futureTetramino;
         drawPiece();
     }
