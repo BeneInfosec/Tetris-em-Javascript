@@ -1,5 +1,5 @@
-var NCOL= prompt ("Digite a largura do tabuleiro");//Quantidade de colunas da matriL base
-var NLIN= prompt ("Digite a altura do tabuleiro");//Quantidade de linhas da matriL base
+var NCOL= prompt ("Digite a largura do tabuleiro (MAX: 22)");//Quantidade de colunas da matriL base
+var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linhas da matriL base
 
 const pixel = 20;//Tamanho dos blocos da matriL base //Podemos mudar para Square ou quadrado essa const ?
 const EMPTY_SQ = "WHITE";
