@@ -121,7 +121,7 @@ function deletePiece(){
     }
 }
 
-function drawPiece(cor){
+function drawPiece(){
     for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
         for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
