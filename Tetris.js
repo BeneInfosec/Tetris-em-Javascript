@@ -1,16 +1,18 @@
 var NCOL= prompt ("Digite a largura do tabuleiro (MAX: 22)");//Quantidade de colunas da matriL base
 var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linhas da matriL base
 
-const pixel = 20;//Tamanho dos blocos da matriL base //Podemos mudar para Square ou quadrado essa const ?
+const pixel = 500/NLIN;//Tamanho dos blocos da matriL base //Podemos mudar para Square ou quadrado essa const ?
 const EMPTY_SQ = "WHITE";
 
-var canvas = document.getElementById('MatriL');//Pegar a matriL principal pelo ID
+var canvas = document.getElementById('Matriz');//Pegar a matriL principal pelo ID
+canvas.width = 250;
+canvas.height = 500;
 var blocos = canvas.getContext("2d");//Efeito 2d
 var intervalo = setInterval(tickMovimentation, 1000);
 var base = []; //MatriL de base
 var linha_nova=0;
 var coluna_nova=0;
-
+var gameState = 0;
 
 //Criando a Matriz base
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
@@ -20,21 +22,21 @@ for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
     }
 }
 
-function criarBlocosMatriL(linha, coluna, cor) {
+function criarBlocosMatriz(linha, coluna, cor) {
     blocos.fillStyle = EMPTY_SQ ;
     blocos.fillRect(linha*pixel, coluna*pixel, pixel, pixel);
     blocos.strokeStyle = "BLACK";
     blocos.strokeRect(linha*pixel, coluna*pixel, pixel, pixel);
 }
 
-function mostrarMatriL() {
+function mostrarMatriz() {
     for (linha = 0 ;linha < NLIN ; linha++){
         for(coluna = 0; coluna < NCOL ;coluna++){
-              criarBlocosMatriL(coluna, linha, base[coluna][linha]);
+              criarBlocosMatriz(coluna, linha, base[coluna][linha]);
         }
     }
 }   
-mostrarMatriL();
+mostrarMatriz();
 
              //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
 
@@ -52,35 +54,34 @@ const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1
 
 function peca_aleatoria(){ //função para gerar peça aleatoria
   var random = (Math.floor(Math.random()*6)+1);
-
   switch(random){
     case 1:
-      this.cor = "blue"
+      this.cor = "blue";
       this.Tetramino = L;
       Peca(Tetramino,cor);
       break;
     case 2:
-      this.cor = "red"
+      this.cor = "red";
       this.Tetramino = M;
       Peca(Tetramino,cor);
       break;
     case 3:
-      this.cor = "green"
+      this.cor = "green";
       this.Tetramino = N;
       Peca(Tetramino,cor);
     break;
     case 4:
-      this.cor = "Gold"
+      this.cor = "Gold";
       this.Tetramino = O;
       Peca(Tetramino,cor);
     break;
     case 5:
-      this.cor = "DeepPink"
+      this.cor = "DeepPink";
       this.Tetramino = Y;
       Peca(Tetramino,cor);
     break;
     case 6:
-      this.cor = "purple"
+      this.cor = "purple";
       this.Tetramino = U;
       Peca(Tetramino,cor);
     break;
@@ -105,7 +106,14 @@ function Peca(Tetramino,cor){
     GoTetramino = this.GoTetramino;
     linha_nova = this.linha;
     coluna_nova = this.coluna;
-    drawPiece();
+    if(checkColision(0, 0, GoTetramino)){
+        alert('Game over');
+        gameState = 1;
+        clearInterval(intervalo);
+    }
+    else{
+        drawPiece();
+    }
 }
 
 function deletePiece(){
@@ -138,7 +146,6 @@ function tickMovimentation() { //Função para a movimentação constante da pe�
     if(checkColision(-1, 0, GoTetramino)){
         drawPieceOnBoard();
         peca_aleatoria();
-       
     }
     else{
         deletePiece(); //apagar peça antes de mover
@@ -148,22 +155,27 @@ function tickMovimentation() { //Função para a movimentação constante da pe�
 }
 
 document.onkeydown = function(event) { //função para detectar as setas do teclado que sao pressionadas
-    switch (event.keyCode) {
-       case 37: //se for a seta <
-            var arrow = 37;
-            arrowMovimentation(arrow);
-          break;
-       case 38: //se for a seta ^
-            arrow = 38;
-            arrowMovimentation(arrow);
-          break;
-       case 39: //se for a seta >
-            var arrow = 39;
-            arrowMovimentation(arrow);
-          break;
-       case 40: //se for a seta para baixo
-            rotatePiece();
-          break;
+    if(gameState == 1){
+        return false;
+    }
+    else{
+        switch (event.keyCode) {
+        case 37: //se for a seta <
+                var arrow = 37;
+                arrowMovimentation(arrow);
+            break;
+        case 38: //se for a seta ^
+                arrow = 38;
+                arrowMovimentation(arrow);
+            break;
+        case 39: //se for a seta >
+                var arrow = 39;
+                arrowMovimentation(arrow);
+            break;
+        case 40: //se for a seta para baixo
+                rotatePiece();
+            break;
+        }
     }
 };
 
@@ -217,9 +229,6 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             deletePiece();
             Peca.GoTetramino = Peca.Tetramino
             Peca.Tetramino[Peca.TetraminoN++];
-
-            alert("Tetramino" + "[ " +Peca.TetraminoN);
-            alert("Peca.Tetramino");
             drawPiece();
         }
     }
