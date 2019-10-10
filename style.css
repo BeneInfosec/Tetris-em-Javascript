@@ -1,5 +1,5 @@
 body {
-       background-image: url("imagemFundo.jpg");
+       background: #66CDAA;
        height: 100%;
        width: 80%;
        margin-right: 10%;
@@ -28,5 +28,6 @@ canvas{
       position: absolute;
       top: 15%;
       left: 40%;
+      box-shadow: 15px 15px 10px #458B74;
       
 }

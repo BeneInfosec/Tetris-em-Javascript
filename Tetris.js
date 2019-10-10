@@ -1,8 +1,9 @@
 var NCOL= prompt ("Digite a largura do tabuleiro (MAX: 22)");//Quantidade de colunas da matriL base
 var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linhas da matriL base
 
-const pixel = 500/NLIN;//Tamanho dos blocos da matriL base //Podemos mudar para Square ou quadrado essa const ?
-const EMPTY_SQ = "WHITE";
+const height_pixel = 500/NLIN;//Tamanho dos blocos da matriL base
+const width_pixel = 250/NCOL;
+const EMPTY_SQ = "#eeeeee   ";
 
 var canvas = document.getElementById('Matriz');//Pegar a matriL principal pelo ID
 canvas.width = 250;
@@ -24,9 +25,9 @@ for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
 
 function criarBlocosMatriz(linha, coluna, cor) {
     blocos.fillStyle = EMPTY_SQ ;
-    blocos.fillRect(linha*pixel, coluna*pixel, pixel, pixel);
-    blocos.strokeStyle = "BLACK";
-    blocos.strokeRect(linha*pixel, coluna*pixel, pixel, pixel);
+    blocos.fillRect(linha*width_pixel, coluna*height_pixel, width_pixel, height_pixel);
+    blocos.strokeStyle = 'black';
+    blocos.strokeRect(linha*width_pixel, coluna*height_pixel, width_pixel, height_pixel);
 }
 
 function mostrarMatriz() {
@@ -122,8 +123,8 @@ function deletePiece(){
         for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
             if(GoTetramino[linha][coluna] == 1){
                 blocos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
-                blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
+                blocos.fillRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);
             }
         }
     }
@@ -135,8 +136,8 @@ function drawPiece(){
         for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
             if(GoTetramino[linha][coluna] == 1){
                 blocos.fillStyle = cor ; //Define a cor do bloco gerado
-                blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
+                blocos.fillRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);
             }
         }
     }
@@ -266,8 +267,8 @@ function drawPieceOnBoard(){
             if(GoTetramino[linha][coluna] == 1){
                 base[linha+linha_nova][coluna+coluna_nova] = cor;
                 blocos.fillStyle = cor ; //Define a cor do bloco gerado
-                blocos.fillRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                blocos.strokeRect((coluna_nova+coluna)*pixel, (linha+linha_nova)*pixel, pixel, pixel);
+                blocos.fillRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);
             }
         }
        
@@ -290,8 +291,8 @@ function verificalinha(){
                 for(col = 0; col < NCOL; col ++){  // se foi preenchida
                   base[lin][col] = base[lin+1][col]; // coloca as colunas em branco
                   blocos.fillStyle = base[lin][col]; //Define a cor do bloco gerado
-                  blocos.fillRect(col*pixel, (lin)*pixel, pixel, pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                  blocos.strokeRect(col*pixel, (lin)*pixel, pixel, pixel);
+                  blocos.fillRect(col*width_pixel, lin*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                  blocos.strokeRect(col*width_pixel, lin*height_pixel, width_pixel, height_pixel);
                 }
             }
             contador = 0;
