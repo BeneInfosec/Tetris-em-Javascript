@@ -92,3 +92,15 @@ header {
       margin-left: 5px;
       height: 125px;
 }
+/*Estilo do ranking */
+ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+  }
+  li {
+      background: url(bullet.gif) no-repeat 0 50%;
+      align-content: center;
+      border: 1px;
+      border-style: dashed;
+  }

@@ -1,6 +1,12 @@
 var NCOL= prompt ("Digite a largura do tabuleiro (MAX: 22)");//Quantidade de colunas da matriL base
 var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linhas da matriL base
 
+//Teste de funcionalidade do ranking
+//var adicionar= prompt ("Nome para o ranking: ");//no
+//var pontos=0;
+//pontos = prompt("Digite sua pontuação");
+
+
 const height_pixel = 500/NLIN;//Tamanho dos blocos da matriL base
 const width_pixel = 250/NCOL;
 const EMPTY_SQ = "#eeeeee   ";
@@ -40,17 +46,11 @@ function mostrarMatriz() {
 mostrarMatriz();
 
              //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
-
 const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,0,0],[1,0,0],[1,1,0]],[ [1,1,1],[1,0,0],[0,0,0]],[ [0,1,1],[0,0,1],[0,0,1]]]; //L normal
-
 const M = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]]]; //quadrado
-
 const N = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]]; //L invertido
-
 const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]],[ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]]; // |
-
 const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]]; // _|_
-
 const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]]; //U             
 
 function peca_aleatoria(){ //função para gerar peça aleatoria
@@ -88,7 +88,6 @@ function peca_aleatoria(){ //função para gerar peça aleatoria
     break;
   }
 }
-
 peca_aleatoria(); //chamar peça aleatoria pela primeira vez
 
 var GoTetramino; //acho q nem precisa disso aqui
@@ -273,8 +272,7 @@ function drawPieceOnBoard(){
         }
        
     }
-   verificalinha();
-    
+   verificalinha();   
 }
 
 function verificalinha(){
@@ -325,3 +323,62 @@ function rotatePiece(){
         drawPiece();
     }
 }
+
+
+//adicionar =  nome[ []]
+//pontos = 
+/*Fazer ordenação
+ mudar a forma de insercao
+*/
+function GetName(){  Name   = prompt("Digite seu nome:");  return Name;   }
+function GetPoints(){Points = prompt("Digite os pontos:");return Points;   }
+
+/*
+function Pessoa(){
+    this.Name=Name;
+    this.Points=Points
+}
+*/
+
+function exibirDados(){
+    var Pessoa = [{
+        Name:"",
+        Points:"",
+        }
+    ];
+
+    alert(Pessoa);
+
+    Pessoa.Name = GetName();
+    Pessoa.Points = GetPoints();
+
+    document.getElementById("dados").innerHTML += '<li><b>Nome: </b>'+Pessoa.Name +
+                               '<b> Pontos: </b>'+Pessoa.Points+'</li><br>';//Adicionar ponto aqui
+    
+    console.dir(Pessoa);
+
+    console.dir(Pessoa.sort(OrderPoints));
+
+    return false;
+}
+function OrderPoints(Pessoa_a, Pessoa_b) {
+    return Pessoa_a.Points> Pessoa_b.Points;
+}
+
+
+/*
+function sortByColumn(a, colIndex){
+    a.sort(sortFunction);
+    function sortFunction(a, b) {
+        if (a[colIndex] === b[colIndex]) {
+            return 0;
+        }
+        else {
+            return (a[colIndex] < b[colIndex]) ? -1 : 1;
+        }
+    }
+    return a;
+}
+
+var sorted_a = sortByColumn(a, 2);
+*/
