@@ -1,25 +1,56 @@
 var NCOL= prompt ("Digite a largura do tabuleiro (MAX: 22)");//Quantidade de colunas da matriL base
 var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linhas da matriL base
 
-//Teste de funcionalidade do ranking
-//var adicionar= prompt ("Nome para o ranking: ");//no
-//var pontos=0;
-//pontos = prompt("Digite sua pontuação");
-
+var Jogadores = [];//Criando diversos jogadores com o construtor Pessoa
 
 const height_pixel = 500/NLIN;//Tamanho dos blocos da matriL base
 const width_pixel = 250/NCOL;
-const EMPTY_SQ = "#eeeeee   ";
+const EMPTY_SQ = "#eeeeee";
 
 var canvas = document.getElementById('Matriz');//Pegar a matriL principal pelo ID
 canvas.width = 250;
 canvas.height = 500;
 var blocos = canvas.getContext("2d");//Efeito 2d
-var intervalo = setInterval(tickMovimentation, 1000);
+var intervalo;
 var base = []; //MatriL de base
 var linha_nova=0;
 var coluna_nova=0;
 var gameState = 0;
+var pecaAtual;
+var proximaPeca;
+
+
+class Peca{
+    constructor(Tetramino,cor)
+    {
+        this.Tetramino=Tetramino;
+        this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
+        this.GoTetramino = this.Tetramino[this.TetraminoN]; //Vá bloco L = bloco [posicao0]
+        this.cor=cor;
+        if(Tetramino == O)
+        {
+            this.linha=NLIN-4;//posicao inicial do bloco O
+            this.coluna = Math.floor((NCOL / 2) - 1);
+        }
+        else {
+            this.linha = NLIN - 3;//posição inicial dos outros blocos
+            this.coluna = Math.floor((NCOL / 2) - 1);//posicao inicial acima da matriL principal (Para cair dps)
+        }
+    }
+
+}
+
+
+let checkGameOver = () => {
+
+    if(checkColision(0, 0, pecaAtual.GoTetramino)){
+        alert('Game over');
+        gameState = 1;
+        clearInterval(intervalo);
+        }
+    };
+
+
 
 //Criando a Matriz base
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
@@ -53,103 +84,117 @@ const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,
 const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]]; // _|_
 const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]]; //U             
 
-function peca_aleatoria(){ //função para gerar peça aleatoria
-  var random = (Math.floor(Math.random()*6)+1);
+
+
+var peca_proxima = (Math.floor(Math.random()*6)+1);
+pecaAtual = peca_aleatoria(peca_proxima)
+console.log(pecaAtual);
+peca_proxima = (Math.floor(Math.random()*6)+1);
+proximaPeca = peca_aleatoria(peca_proxima);
+drawPiece_1(proximaPeca);
+
+
+function peca_aleatoria(random){ //função para gerar peça aleatoria
+  
   switch(random){
     case 1:
-      this.cor = "blue";
-      this.Tetramino = L;
-      Peca(Tetramino,cor);
+      return new Peca(L,"blue");
       break;
     case 2:
-      this.cor = "red";
-      this.Tetramino = M;
-      Peca(Tetramino,cor);
+      return new Peca(M,"red");
       break;
     case 3:
-      this.cor = "green";
-      this.Tetramino = N;
-      Peca(Tetramino,cor);
+      return new Peca(N,"green");
     break;
     case 4:
-      this.cor = "Gold";
-      this.Tetramino = O;
-      Peca(Tetramino,cor);
+      return new Peca(O,"Gold");
     break;
     case 5:
-      this.cor = "DeepPink";
-      this.Tetramino = Y;
-      Peca(Tetramino,cor);
+      return new Peca(Y,"DeepPink");
     break;
     case 6:
-      this.cor = "purple";
-      this.Tetramino = U;
-      Peca(Tetramino,cor);
+      return new Peca(U,"purple");
     break;
   }
+  
 }
-peca_aleatoria(); //chamar peça aleatoria pela primeira vez
 
-var GoTetramino; //acho q nem precisa disso aqui
+intervalo = setInterval(tickMovimentation, 1000);
+
+
 //Criando um prototipo da funcao para faLer os varios tipos de blocos
 
-function Peca(Tetramino,cor){
-    this.Tetramino=Tetramino;
-    this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
-    this.GoTetramino = this.Tetramino[this.TetraminoN]; //Vá bloco L = bloco [posicao0]
-    this.cor=cor;
-    if(Tetramino == O) 
-    this.linha=NLIN-4;//posicao inicial do bloco O
-    else
-    this.linha = NLIN-3;//posição inicial dos outros blocos
-    this.coluna=Math.floor((NCOL/2)-1);//posicao inicial acima da matriL principal (Para cair dps)
-    GoTetramino = this.GoTetramino;
-    linha_nova = this.linha;
-    coluna_nova = this.coluna;
-    if(checkColision(0, 0, GoTetramino)){
-        alert('Game over');
-        gameState = 1;
-        clearInterval(intervalo);
-    }
-    else{
-        drawPiece();
-    }
-}
+
 
 function deletePiece(){
-    for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
+
+	 
+    for (linha = 0; (linha+pecaAtual.linha) < (pecaAtual.linha + pecaAtual.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
-        for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
-            if(GoTetramino[linha][coluna] == 1){
+
+        for (coluna = 0; (coluna + pecaAtual.coluna) < (pecaAtual.coluna + pecaAtual.GoTetramino.length) ; coluna++) {
+            if(pecaAtual.GoTetramino[linha][coluna] == 1){
                 blocos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
-                blocos.fillRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                blocos.strokeRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);
+                blocos.fillRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);
             }
         }
+
     }
 }
 
+
 function drawPiece(){
-    for (linha = 0; (linha+linha_nova) < (linha_nova+ GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
+    for (linha = 0; (linha+pecaAtual.linha) < (pecaAtual.linha+ pecaAtual.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
-        for (coluna = 0; (coluna + coluna_nova) < (coluna_nova + GoTetramino.length) ; coluna++) {
-            if(GoTetramino[linha][coluna] == 1){
-                blocos.fillStyle = cor ; //Define a cor do bloco gerado
-                blocos.fillRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                blocos.strokeRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);
+        for (coluna = 0; (coluna + pecaAtual.coluna) < (pecaAtual.coluna + pecaAtual.GoTetramino.length) ; coluna++) {
+            if(pecaAtual.GoTetramino[linha][coluna] == 1){
+                blocos.fillStyle = pecaAtual.cor ; //Define a cor do bloco gerado
+                blocos.fillRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);
             }
         }
     }
+    
+
+}
+
+function drawPiece_1(proxima){
+
+	console.log(proxima);
+	console.log("AQUI Zè");
+	var next = document.getElementById('next-canvas');//teste
+	next.width = 150;
+	next.height = 100;
+	var bloquinhos = next.getContext("2d"); //teste
+
+    for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
+            if(proxima.GoTetramino[linha1][coluna1] == 1){
+                bloquinhos.fillStyle = proxima.cor ; //Define a cor do bloco gerado
+                bloquinhos.fillRect(coluna1*width_pixel, linha1*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                bloquinhos.strokeRect(coluna1*width_pixel, linha1*height_pixel, width_pixel, height_pixel);
+            }
+        }
+    }
+    
 }
 
 function tickMovimentation() { //Função para a movimentação constante da peça
-    if(checkColision(-1, 0, GoTetramino)){
+    if(checkColision(-1, 0, pecaAtual.GoTetramino)){
         drawPieceOnBoard();
-        peca_aleatoria();
+        pecaAtual = proximaPeca;
+        proximaPeca = peca_aleatoria(Math.floor(Math.random()*6)+1);
+        checkGameOver();
+        console.log(proximaPeca);
+        drawPiece_1(proximaPeca);
     }
     else{
+    	
         deletePiece(); //apagar peça antes de mover
-        linha_nova--; //sobe a peça
+
+        pecaAtual.linha--; //sobe a peça
         drawPiece(); //desenha a peça no lugar novo
     }
 }
@@ -182,70 +227,75 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
 function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da peça
     if(arrow == 37)
     {
-        if(checkColision(0, -1, GoTetramino)){
+        if(checkColision(0, -1, pecaAtual.GoTetramino)){
             return false;
         }
         else{
             deletePiece();
-            coluna_nova--;
+            pecaAtual.coluna--;
             drawPiece();
         }
     }
     else
     if(arrow == 39)
     {
-        if(checkColision(0, 1, GoTetramino)){
+        if(checkColision(0, 1, pecaAtual.GoTetramino)){
             return false;
         }
         else{
             deletePiece();
-            coluna_nova++;
+            pecaAtual.coluna++;
             drawPiece();
         }
     }
     else
     if(arrow == 38)
     {
-        if(checkColision(-1, 0, GoTetramino)){
+        if(checkColision(-1, 0, pecaAtual.GoTetramino)){
             drawPieceOnBoard();
-            peca_aleatoria();
+            pecaAtual = proximaPeca;
+            proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
+            checkGameOver();
+            drawPiece_1(proximaPeca);
             return false;
 
         }
         else{
             deletePiece();
-            linha_nova--;
+            pecaAtual.linha--;
             drawPiece();
         }
     }
     if(arrow == 40) //Funcao para girar a peca
     {
-        if (Peca.TetraminoN > 3)//reseta o vetor 
+        if (pecaAtual.TetraminoN > 3)//reseta o vetor
         {
-            Peca.TetraminoN =0;
+            pecaAtual.TetraminoN =0;
         }
         else //se nao for a ultima posicao da peca 
         {
             deletePiece();
-            Peca.GoTetramino = Peca.Tetramino
-            Peca.Tetramino[Peca.TetraminoN++];
+            pecaAtual.GoTetramino = pecaAtual.Tetramino;
+            pecaAtual.Tetramino[pecaAtual.TetraminoN++];
             drawPiece();
         }
     }
 }
 
 function checkColision(r, c, futurePiece){
-    for(linha = 0 ; linha < GoTetramino.length ; linha++){
-        for(coluna = 0 ; coluna < GoTetramino.length ; coluna++){
+    for(linha = 0 ; linha < pecaAtual.GoTetramino.length ; linha++){
+        for(coluna = 0 ; coluna < pecaAtual.GoTetramino.length ; coluna++){
             if(futurePiece[linha][coluna] != 0){
                 let nextRow;
                 let nextCol;
-                nextRow = linha + r + linha_nova;
-                nextCol = coluna + c + coluna_nova;
+                nextRow = linha + r + pecaAtual.linha;
+                nextCol = coluna + c + pecaAtual.coluna;
                 if(nextRow < 0 || nextCol < 0 || nextCol > NCOL){
+                	
                     return true;
                 }
                 if(base[nextRow][nextCol] != EMPTY_SQ){
+
                     return true;
                 }
                 else{
@@ -261,18 +311,20 @@ function checkColision(r, c, futurePiece){
 }
 
 function drawPieceOnBoard(){
-    for(linha = 0 ; linha < GoTetramino.length ; linha++){
-        for(coluna = 0 ; coluna < GoTetramino.length ; coluna++){
-            if(GoTetramino[linha][coluna] == 1){
-                base[linha+linha_nova][coluna+coluna_nova] = cor;
-                blocos.fillStyle = cor ; //Define a cor do bloco gerado
-                blocos.fillRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                blocos.strokeRect((coluna_nova+coluna)*width_pixel, (linha+linha_nova)*height_pixel, width_pixel, height_pixel);
+    for(linha = 0 ; linha < pecaAtual.GoTetramino.length ; linha++){
+        for(coluna = 0 ; coluna < pecaAtual.GoTetramino.length ; coluna++){
+            if(pecaAtual.GoTetramino[linha][coluna] == 1){
+                base[linha+pecaAtual.linha][coluna+pecaAtual.coluna] = pecaAtual.cor;
+                blocos.fillStyle = pecaAtual.cor ; //Define a cor do bloco gerado
+                blocos.fillRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                blocos.strokeRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);
             }
         }
        
     }
-   verificalinha();   
+   verificalinha();
+
+    
 }
 
 function verificalinha(){
@@ -303,82 +355,68 @@ function verificalinha(){
 } 
 
 function rotatePiece(){
-    let futureN = TetraminoN;
-    let futureTetramino = GoTetramino;
+    let futureN = pecaAtual.TetraminoN;
+    let futureTetramino = pecaAtual.GoTetramino;
     if(futureN == 3){
         futureN = 0;
-        futureTetramino = Tetramino[futureN];
+        futureTetramino = pecaAtual.Tetramino[futureN];
     }
     else{
         futureN++;
-        futureTetramino = Tetramino[futureN];
+        futureTetramino = pecaAtual.Tetramino[futureN];
     }
     if(checkColision(0, 0, futureTetramino)){
         return false;
     }
     else{
         deletePiece();
-        TetraminoN = futureN;
-        GoTetramino = futureTetramino;
+        pecaAtual.TetraminoN = futureN;
+        pecaAtual.GoTetramino = futureTetramino;
         drawPiece();
     }
 }
+/*Funcao para o ranking */
+var Points;
+var Name;
+var Level;
+var Time;
+var cont=0;
 
+//Criando arrow function como objeto pessoa
+class Pessoa {
+    constructor() {
+        this.Name = SetName(Name);
+        this.Points = SetPoints(Points);
+        this.Level = SetLevel(Level);
+        this.Time = SetTime(Time);
+    }
+};
 
-//adicionar =  nome[ []]
-//pontos = 
-/*Fazer ordenação
- mudar a forma de insercao
-*/
-function GetName(){  Name   = prompt("Digite seu nome:");  return Name;   }
-function GetPoints(){Points = prompt("Digite os pontos:");return Points;   }
-
-/*
-function Pessoa(){
-    this.Name=Name;
-    this.Points=Points
-}
-*/
+//Funções para setar o valor dos atributos
+function SetName(){Name =  prompt("Digite seu nome:");return Name;}
+function SetPoints(){Points = prompt("Digite os pontos:");return Points;}
+function SetLevel(){Level = prompt("Digite o nivel que chegou:"); return Level}
+function SetTime(){Time = prompt("Tempo de jogo:"); return Time}
 
 function exibirDados(){
-    var Pessoa = [{
-        Name:"",
-        Points:"",
-        }
-    ];
 
-    alert(Pessoa);
-
-    Pessoa.Name = GetName();
-    Pessoa.Points = GetPoints();
-
-    document.getElementById("dados").innerHTML += '<li><b>Nome: </b>'+Pessoa.Name +
-                               '<b> Pontos: </b>'+Pessoa.Points+'</li><br>';//Adicionar ponto aqui
+    console.log(Jogadores.push (new Pessoa()));//Adicionando Pessoas ao array Jogadores
     
-    console.dir(Pessoa);
+    //Funcao para ordenar o Vetor de jogadores a partir da maior pontução
+    Jogadores.sort((a, b) => (a.Points < b.Points) ? 1 : -1)
 
-    console.dir(Pessoa.sort(OrderPoints));
+    document.getElementById("dados").innerHTML = ""; //Limpa o campo dados antes de imprimir a lista 
+
+    //Item Percorre a quantidade de jogadores imprimindo no html
+    Jogadores.forEach(item => {
+        document.getElementById("dados").innerHTML +=
+        '<li><b>Name: </b>'+item.Name +
+        '<b> Points: </b>'+item.Points+
+        '<br><b> Level: </b>'+item.Level +
+        '<b> Time: </b>'+item.Time+
+        '</li>';//Adicionar ponto aqu
+    });
 
     return false;
-}
-function OrderPoints(Pessoa_a, Pessoa_b) {
-    return Pessoa_a.Points> Pessoa_b.Points;
-}
-
-
-/*
-function sortByColumn(a, colIndex){
-    a.sort(sortFunction);
-    function sortFunction(a, b) {
-        if (a[colIndex] === b[colIndex]) {
-            return 0;
-        }
-        else {
-            return (a[colIndex] < b[colIndex]) ? -1 : 1;
-        }
-    }
-    return a;
-}
-
-var sorted_a = sortByColumn(a, 2);
-*/
+} 
+ 
