@@ -25,6 +25,9 @@ var controlSpeed = 0;
 var level = 1;
 var tem = true;
 
+var gameover = new Audio('smb_gameover (online-audio-converter.com).mp3');
+var up = new Audio('smb_1-up (online-audio-converter.com).mp3');
+var level_up = new Audio ('smb_warning (online-audio-converter.com).mp3');
 
 
 class Peca{
@@ -49,6 +52,7 @@ class Peca{
 
 let checkGameOver = () => {
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
+    	gameover.play();
         alert('Game over');
         gameState = 1;
         clearInterval(intervalo);
@@ -419,6 +423,9 @@ function verificalinha(){
         document.getElementById("points").innerHTML = display;
         controlSpeed += (rowsSequence*10)*rowsSequence;
         if(controlSpeed/500 > 1){
+        	level_up.play();
+        	up.pause();//pausar o up
+        	up.currentTime = 0; //setar o up para 0
             level++;
             var display = "Level: " + level.toString();
             document.getElementById("level").innerHTML = display;
@@ -464,6 +471,7 @@ function gameTime()
 }
 
 function eliminatedRows(){
+	up.play();
     rowscount++;
     var display = "Eliminated rows: " + rowscount.toString();
     document.getElementById("rows").innerHTML = display;
