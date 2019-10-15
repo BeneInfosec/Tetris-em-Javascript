@@ -82,13 +82,37 @@ header {
 }
 #next-canvas{
       width: 240px;
-      margin-top: 5px;
-      margin-left: 5px;
+      margin-top: 15px;
+      margin-left: 70px;
       height: 125px;
+      
 }
 #hold-canvas{
       width: 240px;
       margin-top: 5px;
       margin-left: 5px;
       height: 125px;
+}
+#score-info{
+      height: auto;
+      width: 240px;
+      margin-top: 5px;
+      margin-left: 5px;
+}
+
+#time{
+      font-family: cursive;
+      text-align: center;
+}
+#rows{
+      font-family: cursive;
+      text-align: center;
+}
+#points{
+      font-family: cursive;
+      text-align: center;
+}
+#level{
+      font-family: cursive;
+      text-align: center;
 }
