@@ -17,11 +17,15 @@ var linha_nova=0;
 var coluna_nova=0;
 var gameState = 0;
 var pecaAtual;
+var holdedPiece;
 var proximaPeca;
 var rowscount = 0;
 var points=0;
 var controlSpeed = 0;
 var level = 1;
+var tem = true;
+
+
 
 class Peca{
     constructor(Tetramino,cor)
@@ -141,6 +145,24 @@ function deletePiece(){
     }
 }
 
+function deletePiece_2(proxima){
+    var hold = document.getElementById('hold-canvas');
+    hold.width = 150;
+    hold.height = 100;
+    var bloquitos = hold.getContext("2d");
+    for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
+            if(proxima.GoTetramino[linha1][coluna1] == 1){
+                bloquitos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
+                bloquitos.strokeStyle = EMPTY_SQ ;
+                bloquitos.fillRect(coluna1*20, linha1*20, 20, 20);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                bloquitos.strokeRect(coluna1*20, linha1*20, 20, 20);
+            }
+        }
+    }  
+}
+
 function drawPiece(){
     for (linha = 0; (linha+pecaAtual.linha) < (pecaAtual.linha+ pecaAtual.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
@@ -166,6 +188,23 @@ function drawPiece_1(proxima){
                 bloquinhos.fillStyle = proxima.cor ; //Define a cor do bloco gerado
                 bloquinhos.fillRect(coluna1*20, linha1*20, 20, 20);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
                 bloquinhos.strokeRect(coluna1*20, linha1*20, 20, 20);
+            }
+        }
+    }  
+}
+
+function drawPiece_2(proxima){
+    var hold = document.getElementById('hold-canvas');
+    hold.width = 150;
+    hold.height = 100;
+    var bloquitos = hold.getContext("2d");
+    for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
+            if(proxima.GoTetramino[linha1][coluna1] == 1){
+                bloquitos.fillStyle = proxima.cor ; //Define a cor do bloco gerado
+                bloquitos.fillRect(coluna1*20, linha1*20, 20, 20);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                bloquitos.strokeRect(coluna1*20, linha1*20, 20, 20);
             }
         }
     }  
@@ -212,6 +251,11 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
         case 40: //se for a seta para baixo
                 rotatePiece();
             break;
+        case 67:
+        		var arrow = 67;
+        		arrowMovimentation(arrow);
+        break;
+
         }
     }
 };
@@ -272,6 +316,30 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPiece();
         }
     }
+    if(arrow == 67){
+    	if(tem == true){
+    		holdedPiece = pecaAtual;
+    		deletePiece();
+    		drawPiece_2(holdedPiece);
+    		pecaAtual = proximaPeca;
+    		peca_proxima = (Math.floor(Math.random()*6)+1);
+            proximaPeca = peca_aleatoria(peca_proxima);
+            drawPiece_1(proximaPeca);
+    		drawPiece(pecaAtual);
+    		tem = false;
+    	}
+    	else{
+
+
+    		deletePiece_2(holdedPiece);
+    		deletePiece();
+    		pecaAtual= holdedPiece;
+    		drawPiece(pecaAtual);
+    		
+    		tem = true;
+    	}
+    }
+
 }
 
 function checkColision(r, c, futurePiece){
