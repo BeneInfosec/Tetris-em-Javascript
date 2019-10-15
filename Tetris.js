@@ -3,13 +3,14 @@ var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linh
 
 const height_pixel = 500/NLIN;//Tamanho dos blocos da matriL base
 const width_pixel = 250/NCOL;
-const EMPTY_SQ = "#eeeeee";
+const EMPTY_SQ = "#EEEEEE";
 var canvas = document.getElementById('Matriz');//Pegar a matriL principal pelo ID
 canvas.width = 250;
 canvas.height = 500;
 var blocos = canvas.getContext("2d");//Efeito 2d
-var intervalo = setInterval(tickMovimentation, 1000);
-var tempo_controle = setInterval(gameTime, 600);
+var gameSpeed = 1000;
+var intervalo = setInterval(tickMovimentation, gameSpeed);
+var tempo_controle = setInterval(gameTime, 1000);
 var tempo = +new Date(); 
 var base = []; //MatriL de base
 var linha_nova=0;
@@ -17,7 +18,10 @@ var coluna_nova=0;
 var gameState = 0;
 var pecaAtual;
 var proximaPeca;
-
+var rowscount = 0;
+var points=0;
+var controlSpeed = 0;
+var level = 1;
 
 class Peca{
     constructor(Tetramino,cor)
@@ -31,24 +35,25 @@ class Peca{
             this.linha=NLIN-4;//posicao inicial do bloco O
             this.coluna = Math.floor((NCOL / 2) - 1);
         }
-
         else {
             this.linha = NLIN - 3;//posição inicial dos outros blocos
             this.coluna = Math.floor((NCOL / 2) - 1);//posicao inicial acima da matriL principal (Para cair dps)
         }
     }
-
 }
 
 
 let checkGameOver = () => {
-
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
         alert('Game over');
         gameState = 1;
         clearInterval(intervalo);
-        }
-    };
+        return true;
+    }
+    else{
+        return false;
+    }
+};
 var paused = 0;
 
 //Criando a Matriz base
@@ -92,11 +97,11 @@ const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1
 
 
 var peca_proxima = (Math.floor(Math.random()*6)+1);
-pecaAtual = peca_aleatoria(peca_proxima)
-console.log(pecaAtual);
+pecaAtual = peca_aleatoria(peca_proxima);
 peca_proxima = (Math.floor(Math.random()*6)+1);
 proximaPeca = peca_aleatoria(peca_proxima);
 drawPiece_1(proximaPeca);
+drawPiece(pecaAtual);
 
 
 function peca_aleatoria(random){ //função para gerar peça aleatoria
@@ -124,17 +129,8 @@ function peca_aleatoria(random){ //função para gerar peça aleatoria
   
 }
 
-intervalo = setInterval(tickMovimentation, 1000);
-
-
-//Criando um prototipo da funcao para faLer os varios tipos de blocos
-
-
-
 function deletePiece(){
     for (linha = 0; (linha+pecaAtual.linha) < (pecaAtual.linha + pecaAtual.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
-        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
-
         for (coluna = 0; (coluna + pecaAtual.coluna) < (pecaAtual.coluna + pecaAtual.GoTetramino.length) ; coluna++) {
             if(pecaAtual.GoTetramino[linha][coluna] == 1){
                 blocos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
@@ -142,10 +138,8 @@ function deletePiece(){
                 blocos.strokeRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);
             }
         }
-
     }
 }
-
 
 function drawPiece(){
     for (linha = 0; (linha+pecaAtual.linha) < (pecaAtual.linha+ pecaAtual.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
@@ -158,45 +152,40 @@ function drawPiece(){
             }
         }
     }
-    
-
 }
 
 function drawPiece_1(proxima){
-
-    console.log(proxima);
-    console.log("AQUI Zè");
-    var next = document.getElementById('next-canvas');//teste
+    var next = document.getElementById('next-canvas');
     next.width = 150;
     next.height = 100;
-    var bloquinhos = next.getContext("2d"); //teste
-
+    var bloquinhos = next.getContext("2d");
     for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
         for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
             if(proxima.GoTetramino[linha1][coluna1] == 1){
                 bloquinhos.fillStyle = proxima.cor ; //Define a cor do bloco gerado
-                bloquinhos.fillRect(coluna1*width_pixel, linha1*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                bloquinhos.strokeRect(coluna1*width_pixel, linha1*height_pixel, width_pixel, height_pixel);
+                bloquinhos.fillRect(coluna1*20, linha1*20, 20, 20);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                bloquinhos.strokeRect(coluna1*20, linha1*20, 20, 20);
             }
         }
-    }
-    
+    }  
 }
 
 function tickMovimentation() { //Função para a movimentação constante da peça
     if(checkColision(-1, 0, pecaAtual.GoTetramino)){
         drawPieceOnBoard();
         pecaAtual = proximaPeca;
-        proximaPeca = peca_aleatoria(Math.floor(Math.random()*6)+1);
-        checkGameOver();
-        console.log(proximaPeca);
-        drawPiece_1(proximaPeca);
+        proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
+        if(checkGameOver()){
+            return false;
+        }
+        else{
+            drawPiece(pecaAtual);
+            drawPiece_1(proximaPeca);
+        }
     }
     else{
-        
         deletePiece(); //apagar peça antes de mover
-
         pecaAtual.linha--; //sobe a peça
         drawPiece(); //desenha a peça no lugar novo
     }
@@ -329,8 +318,8 @@ function drawPieceOnBoard(){
 }
 
 function verificalinha(){
-
     var contador = 0;
+    var rowsSequence=0;
     for(linha = 0 ; linha < NLIN ; linha++){
         for(coluna = 0 ; coluna < NCOL ; coluna++){ //percorre a matriz base inteira
             if(base[linha][coluna] != EMPTY_SQ){ //verifica se é diferente de vazio
@@ -338,12 +327,14 @@ function verificalinha(){
             }
         }
         if(contador == NCOL){ // compara se a linha inteira está preenchida
+            eliminatedRows();
+            rowsSequence++;
             for(lin = linha; lin < NLIN-1; lin++){
                 for(col = 0; col < NCOL; col ++){  // se foi preenchida
-                  base[lin][col] = base[lin+1][col]; // coloca as colunas em branco
-                  blocos.fillStyle = base[lin][col]; //Define a cor do bloco gerado
-                  blocos.fillRect(col*width_pixel, lin*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                  blocos.strokeRect(col*width_pixel, lin*height_pixel, width_pixel, height_pixel);
+                    base[lin][col] = base[lin+1][col]; // coloca as colunas em branco
+                    blocos.fillStyle = base[lin][col]; //Define a cor do bloco gerado
+                    blocos.fillRect(col*width_pixel, lin*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                    blocos.strokeRect(col*width_pixel, lin*height_pixel, width_pixel, height_pixel);
                 }
             }
             contador = 0;
@@ -353,7 +344,24 @@ function verificalinha(){
             contador = 0; 
         }
     }
-} 
+    if(rowsSequence > 0){
+        
+        points += (rowsSequence*10)*rowsSequence;
+        var display = "Points: " + points.toString();
+        document.getElementById("points").innerHTML = display;
+        controlSpeed += (rowsSequence*10)*rowsSequence;
+        if(controlSpeed/500 > 1){
+            level++;
+            var display = "Level: " + level.toString();
+            document.getElementById("level").innerHTML = display;
+            
+            gameSpeed =  Math.floor(gameSpeed*0.5);
+            controlSpeed -= 500;
+            clearInterval(intervalo);
+            intervalo = setInterval(tickMovimentation, gameSpeed);
+        }
+    }
+}
 
 function rotatePiece(){
     let futureN = pecaAtual.TetraminoN;
@@ -376,8 +384,9 @@ function rotatePiece(){
         drawPiece();
     }
 }
+
 function gameTime()
-  {
+{
     if (gameState == 1 || paused == 1)
         return false;
   	var seconds = Math.floor((+new Date() - tempo) / 1000);
@@ -387,5 +396,8 @@ function gameTime()
 }
 
 function eliminatedRows(){
-    
+    rowscount++;
+    var display = "Eliminated rows: " + rowscount.toString();
+    document.getElementById("rows").innerHTML = display;
+
 }
