@@ -11,10 +11,7 @@ var blocos = canvas.getContext("2d");//Efeito 2d
 var gameSpeed = 1000;
 var intervalo = setInterval(tickMovimentation, gameSpeed);
 var tempo_controle = setInterval(gameTime, 1000);
-var tempo = +new Date(); 
 var base = []; //MatriL de base
-var linha_nova=0;
-var coluna_nova=0;
 var gameState = 0;
 var pecaAtual;
 var proximaPeca;
@@ -22,6 +19,26 @@ var rowscount = 0;
 var points=0;
 var controlSpeed = 0;
 var level = 1;
+var paused = 0;
+var peca_proxima = (Math.floor(Math.random()*6)+1);
+var seconds=0;
+document.getElementById("button2").disabled = true;
+
+//Criando a Matriz base
+             //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
+const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,0,0],[1,0,0],[1,1,0]],[ [1,1,1],[1,0,0],[0,0,0]],[ [0,1,1],[0,0,1],[0,0,1]]]; //L normal
+const M = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]]]; //quadrado
+const N = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]]; //L invertido
+const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]],[ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]]; // | 
+const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]]; // _|_            
+const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]]; //U             
+
+for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
+    base[linha]= [];
+    for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
+        base[linha][coluna] = EMPTY_SQ;
+    }
+}
 
 class Peca{
     constructor(Tetramino,cor)
@@ -42,27 +59,19 @@ class Peca{
     }
 }
 
-
 let checkGameOver = () => {
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
         alert('Game over');
         gameState = 1;
         clearInterval(intervalo);
+        document.getElementById("button2").disabled = false;
+        document.getElementById("button2").style.cursor = "pointer";
         return true;
     }
     else{
         return false;
     }
 };
-var paused = 0;
-
-//Criando a Matriz base
-for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
-    base[linha]= [];
-    for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
-        base[linha][coluna] = EMPTY_SQ;
-    }
-}
 
 function criarBlocosMatriz(linha, coluna, cor) {
     blocos.fillStyle = EMPTY_SQ ;
@@ -77,32 +86,8 @@ function mostrarMatriz() {
               criarBlocosMatriz(coluna, linha, base[coluna][linha]);
         }
     }
-}   
+}
 mostrarMatriz();
-
-             //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
-
-const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,0,0],[1,0,0],[1,1,0]],[ [1,1,1],[1,0,0],[0,0,0]],[ [0,1,1],[0,0,1],[0,0,1]]]; //L normal
-
-const M = [ [ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]],[ [1,1,0],[1,1,0],[0,0,0]]]; //quadrado
-
-const N = [ [ [1,0,0],[1,1,1],[0,0,0]],[ [1,1,0],[1,0,0],[1,0,0]],[ [1,1,1],[0,0,1],[0,0,0]],[ [0,0,1],[0,0,1],[0,1,1]]]; //L invertido
-
-const O = [ [ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]],[ [0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[ [0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]]; // |
-
-const Y = [ [ [0,1,0],[1,1,1],[0,0,0]],[ [0,1,0],[0,1,1],[0,1,0]],[ [0,0,0],[1,1,1],[0,1,0]],[ [0,1,0],[1,1,0],[0,1,0]]]; // _|_
-
-const U = [ [ [1,0,1],[1,1,1],[0,0,0]],[ [0,1,1],[0,1,0],[0,1,1]],[ [0,0,0],[1,1,1],[1,0,1]],[ [1,1,0],[0,1,0],[1,1,0]]]; //U             
-
-
-
-var peca_proxima = (Math.floor(Math.random()*6)+1);
-pecaAtual = peca_aleatoria(peca_proxima);
-peca_proxima = (Math.floor(Math.random()*6)+1);
-proximaPeca = peca_aleatoria(peca_proxima);
-drawPiece_1(proximaPeca);
-drawPiece(pecaAtual);
-
 
 function peca_aleatoria(random){ //função para gerar peça aleatoria
   
@@ -171,24 +156,66 @@ function drawPiece_1(proxima){
     }  
 }
 
+pecaAtual = peca_aleatoria(peca_proxima);
+peca_proxima = (Math.floor(Math.random()*6)+1);
+proximaPeca = peca_aleatoria(peca_proxima);
+drawPiece_1(proximaPeca);
+drawPiece(pecaAtual);
+
+function startGame(){
+    for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
+        base[linha]= [];
+        for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
+            base[linha][coluna] = EMPTY_SQ;
+        }
+    }
+    mostrarMatriz();
+
+    document.getElementById("button2").disabled = true;
+    document.getElementById("button2").style.cursor = "not-allowed";
+    pecaAtual = peca_aleatoria(peca_proxima);
+    peca_proxima = (Math.floor(Math.random()*6)+1);
+    proximaPeca = peca_aleatoria(peca_proxima);
+    drawPiece_1(proximaPeca);
+    drawPiece(pecaAtual);
+    rowscount = 0;
+    points=0;
+    controlSpeed = 0;
+    level = 1;
+    paused = 0;
+    peca_proxima = (Math.floor(Math.random()*6)+1);
+    seconds=0;
+    gameState = 0;
+    gameSpeed = 1000;
+    intervalo = setInterval(tickMovimentation, gameSpeed);
+    
+}
+//startGame();
+
+
 function tickMovimentation() { //Função para a movimentação constante da peça
-    if(checkColision(-1, 0, pecaAtual.GoTetramino)){
-        drawPieceOnBoard();
-        pecaAtual = proximaPeca;
-        proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
-        if(checkGameOver()){
-            return false;
-        }
-        else{
-            drawPiece(pecaAtual);
-            drawPiece_1(proximaPeca);
-        }
+    if(paused == 1){
+        return false;
     }
     else{
-        deletePiece(); //apagar peça antes de mover
-        pecaAtual.linha--; //sobe a peça
-        drawPiece(); //desenha a peça no lugar novo
-    }
+        if(checkColision(-1, 0, pecaAtual.GoTetramino)){
+            drawPieceOnBoard();
+            pecaAtual = proximaPeca;
+            proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
+            if(checkGameOver()){
+                return false;
+            }
+            else{
+                drawPiece(pecaAtual);
+                drawPiece_1(proximaPeca);
+            }
+        }
+        else{
+            deletePiece(); //apagar peça antes de mover
+            pecaAtual.linha--; //sobe a peça
+            drawPiece(); //desenha a peça no lugar novo
+        }
+    } 
 }
 
 document.onkeydown = function(event) { //função para detectar as setas do teclado que sao pressionadas
@@ -247,8 +274,12 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPieceOnBoard();
             pecaAtual = proximaPeca;
             proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
-            checkGameOver();
-            drawPiece_1(proximaPeca);
+            if(checkGameOver()){
+                return false;
+            }
+            else{
+                drawPiece_1(proximaPeca);
+            }
             return false;
 
         }
@@ -389,7 +420,7 @@ function gameTime()
 {
     if (gameState == 1 || paused == 1)
         return false;
-  	var seconds = Math.floor((+new Date() - tempo) / 1000);
+    seconds++;
     var display = "Time: " + seconds.toString() + " seconds";
     document.getElementById("time").innerHTML = display;
     return true;
@@ -400,4 +431,13 @@ function eliminatedRows(){
     var display = "Eliminated rows: " + rowscount.toString();
     document.getElementById("rows").innerHTML = display;
 
+}
+
+function pauseGame(){
+    if(paused == 1){
+        paused = 0;
+    }
+    else{
+        paused = 1;
+    }
 }
