@@ -21,9 +21,9 @@ var gameState = 0;
 var pecaAtual;
 var proximaPeca;
 var rowscount = 0;
-var points=0;
+var Points=0;
 var controlSpeed = 0;
-var level = 1;
+var Level = 1;
 
 class Peca{
     constructor(Tetramino,cor)
@@ -47,7 +47,8 @@ class Peca{
 
 let checkGameOver = () => {
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
-        alert('Game over');
+        exibirDados();
+        //alert('Game over');
         gameState = 1;
         clearInterval(intervalo);
         return true;
@@ -150,30 +151,6 @@ function drawPiece(){
             }
         }
     }
-    
-
-}
-
-function drawPiece_1(proxima){
-
-	console.log(proxima);
-	console.log("AQUI Zè");
-	var next = document.getElementById('next-canvas');//teste
-	next.width = 150;
-	next.height = 100;
-	var bloquinhos = next.getContext("2d"); //teste
-
-    for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
-        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
-        for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
-            if(proxima.GoTetramino[linha1][coluna1] == 1){
-                bloquinhos.fillStyle = proxima.cor ; //Define a cor do bloco gerado
-                bloquinhos.fillRect(coluna1*width_pixel, linha1*height_pixel, width_pixel, height_pixel);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
-                bloquinhos.strokeRect(coluna1*width_pixel, linha1*height_pixel, width_pixel, height_pixel);
-            }
-        }
-    }
-    
 }
 
 function drawPiece_1(proxima){
@@ -369,14 +346,14 @@ function verificalinha(){
     }
     if(rowsSequence > 0){
         
-        points += (rowsSequence*10)*rowsSequence;
-        var display = "Points: " + points.toString();
-        document.getElementById("points").innerHTML = display;
+        Points += (rowsSequence*10)*rowsSequence;
+        var display = "Points: " + Points.toString();
+        document.getElementById("Points").innerHTML = display;
         controlSpeed += (rowsSequence*10)*rowsSequence;
         if(controlSpeed/500 > 1){
-            level++;
-            var display = "Level: " + level.toString();
-            document.getElementById("level").innerHTML = display;
+            Level++;
+            var display = "Level: " + Level.toString();
+            document.getElementById("Level").innerHTML = display;
             
             gameSpeed =  Math.floor(gameSpeed*0.5);
             controlSpeed -= 500;
@@ -407,6 +384,27 @@ function rotatePiece(){
         drawPiece();
     }
 }
+
+function gameTime(){
+    if (gameState == 1 || paused == 1)
+        return false;
+  	var seconds = Math.floor((+new Date() - tempo) / 1000);
+    
+    if (seconds%2){
+        Time =seconds;
+    }
+    
+    var display = "Time: " + seconds.toString() + " seconds";
+    document.getElementById("Time").innerHTML = display;
+    
+    return true;
+}
+
+function eliminatedRows(){
+    rowscount++;
+    var display = "Eliminated rows: " + rowscount.toString();
+    document.getElementById("rows").innerHTML = display;
+}
 /*Funcao para o ranking */
 var Points;
 var Name;
@@ -425,10 +423,10 @@ class Pessoa {
 };
 
 //Funções para setar o valor dos atributos
-function SetName(){Name =  prompt("Digite seu nome:");return Name;}
-function SetPoints(){Points = prompt("Digite os pontos:");return Points;}
-function SetLevel(){Level = prompt("Digite o nivel que chegou:"); return Level}
-function SetTime(){Time = prompt("Tempo de jogo:"); return Time}
+function SetName(){Name =  prompt("Game Over !!! \nRegister to Rank: ");return Name;}
+function SetPoints(){Points;return Points;}
+function SetLevel(){Level; return Level}
+function SetTime(){Time; return Time}
 
 function exibirDados(){
 
@@ -453,19 +451,3 @@ function exibirDados(){
 } 
  
 
-function gameTime()
-{
-    if (gameState == 1 || paused == 1)
-        return false;
-  	var seconds = Math.floor((+new Date() - tempo) / 1000);
-    var display = "Time: " + seconds.toString() + " seconds";
-    document.getElementById("time").innerHTML = display;
-    return true;
-}
-
-function eliminatedRows(){
-    rowscount++;
-    var display = "Eliminated rows: " + rowscount.toString();
-    document.getElementById("rows").innerHTML = display;
-
-}
