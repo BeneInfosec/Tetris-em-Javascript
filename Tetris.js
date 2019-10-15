@@ -4,12 +4,13 @@ var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linh
 const height_pixel = 500/NLIN;//Tamanho dos blocos da matriL base
 const width_pixel = 250/NCOL;
 const EMPTY_SQ = "#eeeeee";
-
 var canvas = document.getElementById('Matriz');//Pegar a matriL principal pelo ID
 canvas.width = 250;
 canvas.height = 500;
 var blocos = canvas.getContext("2d");//Efeito 2d
-var intervalo;
+var intervalo = setInterval(tickMovimentation, 1000);
+var tempo_controle = setInterval(gameTime, 600);
+var tempo = +new Date(); 
 var base = []; //MatriL de base
 var linha_nova=0;
 var coluna_nova=0;
@@ -48,8 +49,7 @@ let checkGameOver = () => {
         clearInterval(intervalo);
         }
     };
-
-
+var paused = 0;
 
 //Criando a Matriz base
 for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
@@ -132,8 +132,6 @@ intervalo = setInterval(tickMovimentation, 1000);
 
 
 function deletePiece(){
-
-     
     for (linha = 0; (linha+pecaAtual.linha) < (pecaAtual.linha + pecaAtual.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
 
@@ -327,9 +325,7 @@ function drawPieceOnBoard(){
         }
        
     }
-   verificalinha();
-
-    
+   verificalinha(); 
 }
 
 function verificalinha(){
@@ -379,4 +375,17 @@ function rotatePiece(){
         pecaAtual.GoTetramino = futureTetramino;
         drawPiece();
     }
+}
+function gameTime()
+  {
+    if (gameState == 1 || paused == 1)
+        return false;
+  	var seconds = Math.floor((+new Date() - tempo) / 1000);
+    var display = "Time: " + seconds.toString() + " seconds";
+    document.getElementById("time").innerHTML = display;
+    return true;
+}
+
+function eliminatedRows(){
+    
 }
