@@ -92,3 +92,14 @@ header {
       margin-left: 5px;
       height: 125px;
 }
+
+#score-info{
+      height: auto;
+      width: 240px;
+      margin-top: 5px;
+      margin-left: 5px;
+}
+
+#time{
+      font-family: cursive;
+}
