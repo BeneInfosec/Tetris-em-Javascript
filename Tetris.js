@@ -1,6 +1,8 @@
 var NCOL= prompt ("Digite a largura do tabuleiro (MAX: 22)");//Quantidade de colunas da matriL base
 var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linhas da matriL base
 
+var Jogadores = [];//Criando diversos jogadores com o construtor Pessoa
+
 const height_pixel = 500/NLIN;//Tamanho dos blocos da matriL base
 const width_pixel = 250/NCOL;
 const EMPTY_SQ = "#EEEEEE";
@@ -14,11 +16,12 @@ var tempo_controle = setInterval(gameTime, 1000);
 var base = []; //MatriL de base
 var gameState = 0;
 var pecaAtual;
+var holdedPiece;
 var proximaPeca;
 var rowscount = 0;
-var points=0;
+var Points=0;
 var controlSpeed = 0;
-var level = 1;
+var Level = 1;
 var paused = 0;
 var peca_proxima = (Math.floor(Math.random()*6)+1);
 var seconds=0;
@@ -39,6 +42,11 @@ for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
         base[linha][coluna] = EMPTY_SQ;
     }
 }
+var tem = false;
+
+var gameover = new Audio('smb_gameover (online-audio-converter.com).mp3');
+var up = new Audio('smb_1-up (online-audio-converter.com).mp3');
+var level_up = new Audio ('smb_warning (online-audio-converter.com).mp3');
 
 class Peca{
     constructor(Tetramino,cor)
@@ -61,7 +69,8 @@ class Peca{
 
 let checkGameOver = () => {
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
-        alert('Game over');
+        exibirDados();
+    	  gameover.play();
         gameState = 1;
         clearInterval(intervalo);
         document.getElementById("button2").disabled = false;
@@ -123,7 +132,26 @@ function deletePiece(){
                 blocos.strokeRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);
             }
         }
+
     }
+}
+
+function deletePiece_2(proxima){
+    var hold = document.getElementById('hold-canvas');
+    hold.width = 150;
+    hold.height = 100;
+    var bloquitos = hold.getContext("2d");
+    for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
+            if(proxima.GoTetramino[linha1][coluna1] == 1){
+                bloquitos.fillStyle = EMPTY_SQ ; //Define a cor do bloco gerado
+                bloquitos.strokeStyle = EMPTY_SQ ;
+                bloquitos.fillRect(coluna1*20, linha1*20, 20, 20);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                bloquitos.strokeRect(coluna1*20, linha1*20, 20, 20);
+            }
+        }
+    }  
 }
 
 function drawPiece(){
@@ -176,22 +204,46 @@ function startGame(){
     pecaAtual = peca_aleatoria(peca_proxima);
     peca_proxima = (Math.floor(Math.random()*6)+1);
     proximaPeca = peca_aleatoria(peca_proxima);
+    if(tem == true){
+        deletePiece_2(holdedPiece);
+    }
     drawPiece_1(proximaPeca);
     drawPiece(pecaAtual);
     rowscount = 0;
-    points=0;
+    display = "Eliminated rows: " + rowscount.toString();
+    document.getElementById("rows").innerHTML = display;
+    Points=0;
+    display = "Points: " + Points.toString();
+    document.getElementById("Points").innerHTML = display; 
     controlSpeed = 0;
-    level = 1;
+    Level = 1;
+    display = "Level: " + Level.toString();
+    document.getElementById("Level").innerHTML = display;  
     paused = 0;
     peca_proxima = (Math.floor(Math.random()*6)+1);
     seconds=0;
     gameState = 0;
     gameSpeed = 1000;
     intervalo = setInterval(tickMovimentation, gameSpeed);
-    
-}
-//startGame();
 
+}
+
+function drawPiece_2(proxima){
+    var hold = document.getElementById('hold-canvas');
+    hold.width = 150;
+    hold.height = 100;
+    var bloquitos = hold.getContext("2d");
+    for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
+            if(proxima.GoTetramino[linha1][coluna1] == 1){
+                bloquitos.fillStyle = proxima.cor ; //Define a cor do bloco gerado
+                bloquitos.fillRect(coluna1*20, linha1*20, 20, 20);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                bloquitos.strokeRect(coluna1*20, linha1*20, 20, 20);
+            }
+        }
+    }  
+}
 
 function tickMovimentation() { //Função para a movimentação constante da peça
     if(paused == 1){
@@ -239,6 +291,11 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
         case 40: //se for a seta para baixo
                 rotatePiece();
             break;
+        case 67:
+        		var arrow = 67;
+        		arrowMovimentation(arrow);
+        break;
+
         }
     }
 };
@@ -303,6 +360,27 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPiece();
         }
     }
+    if(arrow == 67){
+    	if(tem == true){
+            deletePiece_2(holdedPiece);
+    		deletePiece();
+    		pecaAtual= holdedPiece;
+    		drawPiece(pecaAtual);
+    		tem = false;
+    	}
+    	else{
+    		holdedPiece = pecaAtual;
+    		deletePiece();
+    		drawPiece_2(holdedPiece);
+    		pecaAtual = proximaPeca;
+    		peca_proxima = (Math.floor(Math.random()*6)+1);
+            proximaPeca = peca_aleatoria(peca_proxima);
+            drawPiece_1(proximaPeca);
+            drawPiece(pecaAtual);
+            tem = true;
+    	}
+    }
+
 }
 
 function checkColision(r, c, futurePiece){
@@ -377,15 +455,17 @@ function verificalinha(){
     }
     if(rowsSequence > 0){
         
-        points += (rowsSequence*10)*rowsSequence;
-        var display = "Points: " + points.toString();
-        document.getElementById("points").innerHTML = display;
+        Points += (rowsSequence*10)*rowsSequence;
+        var display = "Points: " + Points.toString();
+        document.getElementById("Points").innerHTML = display;
         controlSpeed += (rowsSequence*10)*rowsSequence;
         if(controlSpeed/500 > 1){
-            level++;
-            var display = "Level: " + level.toString();
-            document.getElementById("level").innerHTML = display;
-            
+        	  level_up.play();
+            up.pause();//pausar o up
+        	  up.currentTime = 0; //setar o up para 0
+            Level++;
+            var display = "Level: " + Level.toString();
+            document.getElementById("Level").innerHTML = display;        
             gameSpeed =  Math.floor(gameSpeed*0.5);
             controlSpeed -= 500;
             clearInterval(intervalo);
@@ -416,22 +496,69 @@ function rotatePiece(){
     }
 }
 
-function gameTime()
-{
+function gameTime(){
     if (gameState == 1 || paused == 1)
         return false;
     seconds++;
+    if (seconds%2){
+        Time =seconds;
+    }
     var display = "Time: " + seconds.toString() + " seconds";
-    document.getElementById("time").innerHTML = display;
+    document.getElementById("Time").innerHTML = display;
+    
     return true;
 }
 
 function eliminatedRows(){
+	up.play();
     rowscount++;
     var display = "Eliminated rows: " + rowscount.toString();
     document.getElementById("rows").innerHTML = display;
-
 }
+/*Funcao para o ranking */
+var Points;
+var Name;
+var Level;
+var Time;
+var cont=0;
+
+//Criando arrow function como objeto pessoa
+class Pessoa {
+    constructor() {
+        this.Name = SetName(Name);
+        this.Points = SetPoints(Points);
+        this.Level = SetLevel(Level);
+        this.Time = SetTime(Time);
+    }
+};
+
+//Funções para setar o valor dos atributos
+function SetName(){Name =  prompt("Game Over !!! \nRegister to Rank: ");return Name;}
+function SetPoints(){Points;return Points;}
+function SetLevel(){Level; return Level}
+function SetTime(){Time; return Time}
+
+function exibirDados(){
+
+    Jogadores.push (new Pessoa());//Adicionando Pessoas ao array Jogadores
+    
+    //Funcao para ordenar o Vetor de jogadores a partir da maior pontução
+    Jogadores.sort((a, b) => (a.Points < b.Points) ? 1 : -1)
+
+    document.getElementById("dados").innerHTML = ""; //Limpa o campo dados antes de imprimir a lista 
+
+    //Item Percorre a quantidade de jogadores imprimindo no html
+    Jogadores.forEach(item => {
+        document.getElementById("dados").innerHTML +=
+        '<li><b>Name: </b>'+item.Name +
+        '<b> Points: </b>'+item.Points+
+        '<br><b> Level: </b>'+item.Level +
+        '<b> Time: </b>'+item.Time+
+        '</li>';//Adicionar ponto aqu
+    });
+
+    return false;
+} 
 
 function pauseGame(){
     if(paused == 1){
