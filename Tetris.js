@@ -15,6 +15,7 @@ var intervalo = setInterval(tickMovimentation, gameSpeed);
 var tempo_controle = setInterval(gameTime, 1000);
 var base = []; //MatriL de base
 var gameState = 0;
+//usadas na holdedPiece
 var pecaAtual;
 var holdedPiece;
 var proximaPeca;
@@ -68,7 +69,7 @@ class Peca{
     }
 }
 
-let checkGameOver = () => {
+let checkGameOver = () => {  //Checando se usuário perdeu jogo
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
         gameover.play();
         exibirDados();
@@ -124,7 +125,7 @@ function peca_aleatoria(random){ //função para gerar peça aleatoria
   
 }
 
-function deletePiece(){
+function deletePiece(){  //função para deletar peça
     for (linha = 0; (linha+pecaAtual.linha) < (pecaAtual.linha + pecaAtual.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         for (coluna = 0; (coluna + pecaAtual.coluna) < (pecaAtual.coluna + pecaAtual.GoTetramino.length) ; coluna++) {
             if(pecaAtual.GoTetramino[linha][coluna] == 1){
@@ -137,7 +138,7 @@ function deletePiece(){
     }
 }
 
-function deletePiece_2(proxima){
+function deletePiece_2(proxima){  //função deletar peça no holdedPiece
     var hold = document.getElementById('hold-canvas');
     hold.width = 150;
     hold.height = 100;
@@ -155,7 +156,7 @@ function deletePiece_2(proxima){
     }  
 }
 
-function drawPiece(){
+function drawPiece(){  //desenhar peça no campo
     for (linha = 0; (linha+pecaAtual.linha) < (pecaAtual.linha+ pecaAtual.GoTetramino.length) ;  linha++) { //conta o tamanho (3x3) ou (4x4)
         //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
         for (coluna = 0; (coluna + pecaAtual.coluna) < (pecaAtual.coluna + pecaAtual.GoTetramino.length) ; coluna++) {
@@ -168,7 +169,7 @@ function drawPiece(){
     }
 }
 
-function drawPiece_1(proxima){
+function drawPiece_1(proxima){ //desenhar peça no campo holdedPiece
     var next = document.getElementById('next-canvas');
     next.width = 150;
     next.height = 100;
@@ -191,7 +192,7 @@ proximaPeca = peca_aleatoria(peca_proxima);
 drawPiece_1(proximaPeca);
 drawPiece(pecaAtual);
 
-function startGame(){
+function startGame(){ //função para iniciar jogo
     for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
         base[linha]= [];
         for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
@@ -229,7 +230,7 @@ function startGame(){
 
 }
 
-function drawPiece_2(proxima){
+function drawPiece_2(proxima){ //função desenhar peça no holdedPiece
     var hold = document.getElementById('hold-canvas');
     hold.width = 150;
     hold.height = 100;
@@ -366,15 +367,15 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
         }
     }
     else
-    if(arrow == 67){
-    	if(tem == true){
+    if(arrow == 67){ //função que chama holdedPiece, tecla C
+    	if(tem == true){ //se há peça segurada
             deletePiece_2(holdedPiece);
     		deletePiece();
     		pecaAtual= holdedPiece;
     		drawPiece(pecaAtual);
     		tem = false;
     	}
-    	else{
+    	else{ // se não há nenhuma peça segurada
     		holdedPiece = pecaAtual;
     		deletePiece();
     		drawPiece_2(holdedPiece);
@@ -392,7 +393,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
     }
 }
 
-function checkColision(r, c, futurePiece){
+function checkColision(r, c, futurePiece){  
     for(linha = 0 ; linha < pecaAtual.GoTetramino.length ; linha++){
         for(coluna = 0 ; coluna < pecaAtual.GoTetramino.length ; coluna++){
             if(futurePiece[linha][coluna] != 0){
@@ -483,7 +484,7 @@ function verificalinha(){
     }
 }
 
-function rotatePiece(){
+function rotatePiece(){   //função rotacionar peça
     let futureN = pecaAtual.TetraminoN;
     let futureTetramino = pecaAtual.GoTetramino;
     if(futureN == 3){
@@ -505,7 +506,7 @@ function rotatePiece(){
     }
 }
 
-function gameTime(){
+function gameTime(){  //função gerar tempode jogo
     if (gameState == 1 || paused == 1)
         return false;
     seconds++;
@@ -518,7 +519,7 @@ function gameTime(){
     return true;
 }
 
-function eliminatedRows(){
+function eliminatedRows(){  // função eliminar linhas
 	up.play();
     rowscount++;
     var display = "Eliminated rows: " + rowscount.toString();
