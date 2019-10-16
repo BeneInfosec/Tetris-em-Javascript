@@ -1,13 +1,14 @@
+
 var NCOL= prompt ("Digite a largura do tabuleiro ");//Quantidade de colunas da matriL base
 var NLIN= prompt ("Digite a altura do tabuleiro");//Quantidade de linhas da matriL base
 
 var Jogadores = [];//Criando diversos jogadores com o construtor Pessoa
 
-const height_pixel = 500/NLIN;//Tamanho dos blocos da matriz base
-const width_pixel = 250/NCOL; //Tamanho dos blocos da matriz base
-const EMPTY_SQ = "#EEEEEE"; //cor inicial dos blocos da matriz base
-var canvas = document.getElementById('Matriz');//Pegar a matriz principal pelo ID
-canvas.width = 250; 
+const height_pixel = 500/NLIN;//Tamanho dos blocos da matriL base
+const width_pixel = 250/NCOL;
+const EMPTY_SQ = "#EEEEEE";
+var canvas = document.getElementById('Matriz');//Pegar a matriL principal pelo ID
+canvas.width = 250;
 canvas.height = 500;
 var blocos = canvas.getContext("2d");//Efeito 2d
 var gameSpeed = 1000;
@@ -32,6 +33,7 @@ var levelUp = new Audio ('smb_warning (online-audio-converter.com).mp3');
 var continueMusic = new Audio('y2mate.com - sonic_the_hedgehog_ost_green_hill_zone_G-i8HYi1QH0.mp3');
 //Final
 document.getElementById("button2").disabled = true;
+var activeInstruction = false;
 
 //Criando a Matriz base
              //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
@@ -48,7 +50,6 @@ for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
         base[linha][coluna] = EMPTY_SQ;
     }
 }
-
 continueMusic.play();
 
 
@@ -301,6 +302,9 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
                 var arrow = 67;
                 arrowMovimentation(arrow);
         break;
+        case 80:
+                var arrow = 80;
+                arrowMovimentation(arrow);
 
         }
     }
@@ -352,6 +356,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPiece();
         }
     }
+    else
     if(arrow == 40) //Funcao para girar a peca
     {
         if (pecaAtual.TetraminoN > 3)//reseta o vetor
@@ -366,6 +371,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPiece();
         }
     }
+    else
     if(arrow == 67){
         if(haveHoldedPiece == true){
             deletePiece_2(holdedPiece);
@@ -386,7 +392,10 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             haveHoldedPiece = true;
         }
     }
-
+    else
+    if(arrow == 80){
+        pauseGame();
+    }
 }
 
 function checkColision(r, c, futurePiece){
@@ -465,18 +474,18 @@ function verificalinha(){
         var display = "Points: " + Points.toString();
         document.getElementById("Points").innerHTML = display;
         controlSpeed += (rowsSequence*10)*rowsSequence;
-        if(controlSpeed/5 > 1){
-            continueMusic.pause();
-              levelUp.play();
-            up.pause();//pausar o up
-              up.currentTime = 0; //setar o up para 0
-            Level++;
-            var display = "Level: " + Level.toString();
-            document.getElementById("Level").innerHTML = display;        
-            gameSpeed =  Math.floor(gameSpeed*0.5);
-            controlSpeed -= 5;
-            clearInterval(intervalo);
-            intervalo = setInterval(tickMovimentation, gameSpeed);
+        if(controlSpeed/200 >= 1){
+        	continueMusic.pause();
+          levelUp.play();
+          up.pause();//pausar o up
+          up.currentTime = 0; //setar o up para 0
+          Level++;
+          var display = "Level: " + Level.toString();
+          document.getElementById("Level").innerHTML = display;        
+          gameSpeed =  Math.floor(gameSpeed*0.5);
+          controlSpeed -= 200;
+          clearInterval(intervalo);
+          intervalo = setInterval(tickMovimentation, gameSpeed);
           continueMusic.pause();
           continueMusic.currentTime = 0;
         }
@@ -579,8 +588,38 @@ function exibirDados(){
 function pauseGame(){
     if(paused == 1){
         paused = 0;
+        document.getElementById("button").innerHTML = "Pause game";
     }
     else{
         paused = 1;
+        document.getElementById("button").innerHTML = "Continue game";
     }
+}
+
+function instructWindow(){
+    if(activeInstruction == false){
+        document.getElementById("instructions").style.display = "block";
+        document.getElementById("button").disabled = true;
+        document.getElementById("button").style.cursor = "not-allowed";
+        activeInstruction = true;
+        if(paused == 1){
+            return true;
+        }
+        else{
+            paused = 1;
+        }
+    }
+    else{
+        document.getElementById("instructions").style.display = "none";
+        document.getElementById("button").disabled = false;
+        document.getElementById("button").style.cursor = "pointer";
+        activeInstruction = false;
+        if(document.getElementById("button").textContent == "Continue game"){
+            return false;
+        }
+        else{
+            paused = 0;
+        }
+    }
+    
 }
