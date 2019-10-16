@@ -1,11 +1,13 @@
-var NCOL= prompt ("Digite a largura do tabuleiro (MAX: 22)");//Quantidade de colunas da matriL base
-var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linhas da matriL base
+var NCOL= prompt ("Digite a largura do tabuleiro ");//Quantidade de colunas da matriL base
+var NLIN= prompt ("Digite a altura do tabuleiro");//Quantidade de linhas da matriL base
 
-const height_pixel = 500/NLIN;//Tamanho dos blocos da matriL base
-const width_pixel = 250/NCOL;
-const EMPTY_SQ = "#EEEEEE";
-var canvas = document.getElementById('Matriz');//Pegar a matriL principal pelo ID
-canvas.width = 250;
+var Jogadores = [];//Criando diversos jogadores com o construtor Pessoa
+
+const height_pixel = 500/NLIN;//Tamanho dos blocos da matriz base
+const width_pixel = 250/NCOL; //Tamanho dos blocos da matriz base
+const EMPTY_SQ = "#EEEEEE"; //cor inicial dos blocos da matriz base
+var canvas = document.getElementById('Matriz');//Pegar a matriz principal pelo ID
+canvas.width = 250; 
 canvas.height = 500;
 var blocos = canvas.getContext("2d");//Efeito 2d
 var gameSpeed = 1000;
@@ -17,12 +19,18 @@ var pecaAtual;
 var holdedPiece;
 var proximaPeca;
 var rowscount = 0;
-var points=0;
+var Points=0;
 var controlSpeed = 0;
-var level = 1;
+var Level = 1;
 var paused = 0;
-var peca_proxima = (Math.floor(Math.random()*6)+1);
+var pecaProxima = (Math.floor(Math.random()*6)+1);
 var seconds=0;
+var haveHoldedPiece = false;
+var gameOver = new Audio('smb_gameover (online-audio-converter.com).mp3');
+var up = new Audio('smb_1-up (online-audio-converter.com).mp3');
+var levelUp = new Audio ('smb_warning (online-audio-converter.com).mp3');
+var continueMusic = new Audio('y2mate.com - sonic_the_hedgehog_ost_green_hill_zone_G-i8HYi1QH0.mp3');
+//Final
 document.getElementById("button2").disabled = true;
 
 //Criando a Matriz base
@@ -40,14 +48,12 @@ for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
         base[linha][coluna] = EMPTY_SQ;
     }
 }
-var tem = true;
 
-var gameover = new Audio('smb_gameover (online-audio-converter.com).mp3');
-var up = new Audio('smb_1-up (online-audio-converter.com).mp3');
-var level_up = new Audio ('smb_warning (online-audio-converter.com).mp3');
+continueMusic.play();
 
-class Peca{
-    constructor(Tetramino,cor)
+
+class Peca{ 
+    constructor(Tetramino,cor) //construtor da peça
     {
         this.Tetramino=Tetramino;
         this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
@@ -65,10 +71,9 @@ class Peca{
     }
 }
 
-let checkGameOver = () => {
+let checkGameOver = () => { 
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
-    	gameover.play();
-        alert('Game over');
+        exibirDados();
         gameState = 1;
         clearInterval(intervalo);
         document.getElementById("button2").disabled = false;
@@ -130,6 +135,7 @@ function deletePiece(){
                 blocos.strokeRect((pecaAtual.coluna+coluna)*width_pixel, (linha+pecaAtual.linha)*height_pixel, width_pixel, height_pixel);
             }
         }
+
     }
 }
 
@@ -181,13 +187,14 @@ function drawPiece_1(proxima){
     }  
 }
 
-pecaAtual = peca_aleatoria(peca_proxima);
-peca_proxima = (Math.floor(Math.random()*6)+1);
-proximaPeca = peca_aleatoria(peca_proxima);
+pecaAtual = peca_aleatoria(pecaProxima);
+pecaProxima = (Math.floor(Math.random()*6)+1);
+proximaPeca = peca_aleatoria(pecaProxima);
 drawPiece_1(proximaPeca);
 drawPiece(pecaAtual);
 
 function startGame(){
+    continueMusic.play()
     for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
         base[linha]= [];
         for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
@@ -198,22 +205,31 @@ function startGame(){
 
     document.getElementById("button2").disabled = true;
     document.getElementById("button2").style.cursor = "not-allowed";
-    pecaAtual = peca_aleatoria(peca_proxima);
-    peca_proxima = (Math.floor(Math.random()*6)+1);
-    proximaPeca = peca_aleatoria(peca_proxima);
+    pecaAtual = peca_aleatoria(pecaProxima);
+    pecaProxima = (Math.floor(Math.random()*6)+1);
+    proximaPeca = peca_aleatoria(pecaProxima);
+    if(haveHoldedPiece == true){
+        deletePiece_2(holdedPiece);
+    }
     drawPiece_1(proximaPeca);
     drawPiece(pecaAtual);
     rowscount = 0;
-    points=0;
+    display = "Eliminated rows: " + rowscount.toString();
+    document.getElementById("rows").innerHTML = display;
+    Points=0;
+    display = "Points: " + Points.toString();
+    document.getElementById("Points").innerHTML = display; 
     controlSpeed = 0;
-    level = 1;
+    Level = 1;
+    display = "Level: " + Level.toString();
+    document.getElementById("Level").innerHTML = display;  
     paused = 0;
-    peca_proxima = (Math.floor(Math.random()*6)+1);
+    pecaProxima = (Math.floor(Math.random()*6)+1);
     seconds=0;
     gameState = 0;
     gameSpeed = 1000;
     intervalo = setInterval(tickMovimentation, gameSpeed);
-    
+
 }
 
 function drawPiece_2(proxima){
@@ -235,9 +251,11 @@ function drawPiece_2(proxima){
 
 function tickMovimentation() { //Função para a movimentação constante da peça
     if(paused == 1){
+        continueMusic.pause();
         return false;
     }
     else{
+        continueMusic.play();
         if(checkColision(-1, 0, pecaAtual.GoTetramino)){
             drawPieceOnBoard();
             pecaAtual = proximaPeca;
@@ -280,8 +298,8 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
                 rotatePiece();
             break;
         case 67:
-        		var arrow = 67;
-        		arrowMovimentation(arrow);
+                var arrow = 67;
+                arrowMovimentation(arrow);
         break;
 
         }
@@ -349,27 +367,24 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
         }
     }
     if(arrow == 67){
-    	if(tem == true){
-    		holdedPiece = pecaAtual;
-    		deletePiece();
-    		drawPiece_2(holdedPiece);
-    		pecaAtual = proximaPeca;
-    		peca_proxima = (Math.floor(Math.random()*6)+1);
-            proximaPeca = peca_aleatoria(peca_proxima);
+        if(haveHoldedPiece == true){
+            deletePiece_2(holdedPiece);
+            deletePiece();
+            pecaAtual= holdedPiece;
+            drawPiece(pecaAtual);
+            haveHoldedPiece = false;
+        }
+        else{
+            holdedPiece = pecaAtual;
+            deletePiece();
+            drawPiece_2(holdedPiece);
+            pecaAtual = proximaPeca;
+            pecaProxima = (Math.floor(Math.random()*6)+1);
+            proximaPeca = peca_aleatoria(pecaProxima);
             drawPiece_1(proximaPeca);
-    		drawPiece(pecaAtual);
-    		tem = false;
-    	}
-    	else{
-
-
-    		deletePiece_2(holdedPiece);
-    		deletePiece();
-    		pecaAtual= holdedPiece;
-    		drawPiece(pecaAtual);
-    		
-    		tem = true;
-    	}
+            drawPiece(pecaAtual);
+            haveHoldedPiece = true;
+        }
     }
 
 }
@@ -446,24 +461,28 @@ function verificalinha(){
     }
     if(rowsSequence > 0){
         
-        points += (rowsSequence*10)*rowsSequence;
-        var display = "Points: " + points.toString();
-        document.getElementById("points").innerHTML = display;
+        Points += (rowsSequence*10)*rowsSequence;
+        var display = "Points: " + Points.toString();
+        document.getElementById("Points").innerHTML = display;
         controlSpeed += (rowsSequence*10)*rowsSequence;
-        if(controlSpeed/500 > 1){
-        	level_up.play();
-        	up.pause();//pausar o up
-        	up.currentTime = 0; //setar o up para 0
-            level++;
-            var display = "Level: " + level.toString();
-            document.getElementById("level").innerHTML = display;
-            
+        if(controlSpeed/5 > 1){
+            continueMusic.pause();
+              levelUp.play();
+            up.pause();//pausar o up
+              up.currentTime = 0; //setar o up para 0
+            Level++;
+            var display = "Level: " + Level.toString();
+            document.getElementById("Level").innerHTML = display;        
             gameSpeed =  Math.floor(gameSpeed*0.5);
-            controlSpeed -= 500;
+            controlSpeed -= 5;
             clearInterval(intervalo);
             intervalo = setInterval(tickMovimentation, gameSpeed);
+          continueMusic.pause();
+          continueMusic.currentTime = 0;
         }
+
     }
+   
 }
 
 function rotatePiece(){
@@ -488,23 +507,74 @@ function rotatePiece(){
     }
 }
 
-function gameTime()
-{
+function gameTime(){
     if (gameState == 1 || paused == 1)
         return false;
     seconds++;
+    if (seconds%2){
+        Time =seconds;
+    }
     var display = "Time: " + seconds.toString() + " seconds";
-    document.getElementById("time").innerHTML = display;
+    document.getElementById("Time").innerHTML = display;
+    
     return true;
 }
 
 function eliminatedRows(){
-	up.play();
+    continueMusic.pause();
+    up.play();
     rowscount++;
     var display = "Eliminated rows: " + rowscount.toString();
     document.getElementById("rows").innerHTML = display;
-
+    continueMusic.play();
 }
+/*Funcao para o ranking */
+var Points;
+var Name;
+var Level;
+var Time;
+var cont=0;
+
+//Criando arrow function como objeto pessoa
+class Pessoa {
+    constructor() {
+        this.Name = SetName(Name);
+        this.Points = SetPoints(Points);
+        this.Level = SetLevel(Level);
+        this.Time = SetTime(Time);
+    }
+};
+
+//Funções para setar o valor dos atributos
+function SetName(){Name =  prompt("Game Over !!! \nRegister to Rank: ");return Name;}
+function SetPoints(){Points;return Points;}
+function SetLevel(){Level; return Level}
+function SetTime(){Time; return Time}
+
+function exibirDados(){
+        continueMusic.pause();
+        continueMusic.currentTime = 0;
+        gameOver.play();
+
+    Jogadores.push (new Pessoa());//Adicionando Pessoas ao array Jogadores
+    
+    //Funcao para ordenar o Vetor de jogadores a partir da maior pontução
+    Jogadores.sort((a, b) => (a.Points < b.Points) ? 1 : -1)
+
+    document.getElementById("dados").innerHTML = ""; //Limpa o campo dados antes de imprimir a lista 
+
+    //Item Percorre a quantidade de jogadores imprimindo no html
+    Jogadores.forEach(item => {
+        document.getElementById("dados").innerHTML +=
+        '<li><b>Name: </b>'+item.Name +
+        '<b> Points: </b>'+item.Points+
+        '<br><b> Level: </b>'+item.Level +
+        '<b> Time: </b>'+item.Time+
+        '</li>';//Adicionar ponto aqu
+    });
+
+    return false;
+} 
 
 function pauseGame(){
     if(paused == 1){
