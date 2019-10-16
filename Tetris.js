@@ -19,9 +19,9 @@ var mainPiece;
 var holdedPiece;
 var nextPiece;
 var rowscount = 0;
-var Points=0;
+var points=0;
 var controlSpeed = 0;
-var Level = 1;
+var level = 1;
 var paused = 0;
 var pieceCode = (Math.floor(Math.random()*6)+1);
 var seconds=0;
@@ -34,7 +34,11 @@ var activeInstruction = false;
 
 //Final
 document.getElementById("button2").disabled = true;
-var activeInstruction = false;
+
+//variaveis do hold piece
+var holdedPiece;
+var checkHolded=false;
+
 
 //variaveis do hold piece
 var holdedPiece;
@@ -56,7 +60,6 @@ for (row = 0 ;row < NROW ; row++){ //Gera linhas
         main[row][col] = EMPTY_SQ;
     }
 }
-continueMusic.play();
 
 class Piece{ 
     constructor(Tetramino,color) //construtor da peça
@@ -140,7 +143,6 @@ function deletePiece(){
                 mainBlocks.strokeRect((mainPiece.col+col)*width_pixel, (row+mainPiece.row)*height_pixel, width_pixel, height_pixel);
             }
         }
-
     }
 }
 
@@ -360,7 +362,6 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPiece();
         }
     }
-    else
     if(arrow == 40) //Funcao para girar a peca
     {
         if (mainPiece.TetraminoN > 3)//reseta o vetor
@@ -493,9 +494,7 @@ function checkRow(){
             continueMusic.pause();
             continueMusic.currentTime = 0;
         }
-
     }
-   
 }
 
 function rotatePiece(){
@@ -520,7 +519,8 @@ function rotatePiece(){
     }
 }
 
-function gameTime(){  //função gerar tempode jogo
+function gameTime()
+{
     if (gameState == 1 || paused == 1)
         return false;
     seconds++;
@@ -561,51 +561,24 @@ function setName(){
     name =  prompt("Game Over !!! \nRegister to Rank: ");
     return name;
 }
-/*Funcao para o ranking */
-var Points;
-var Name;
-var Level;
-var Time;
-var cont=0;
 
-//Criando arrow function como objeto pessoa
-class Pessoa {
-    constructor() {
-        this.Name = SetName(Name);
-        this.Points = SetPoints(Points);
-        this.Level = SetLevel(Level);
-        this.Time = SetTime(Time);
-    }
-};
-
-//Funções para setar o valor dos atributos
-function SetName(){Name =  prompt("Game Over !!! \nRegister to Rank: ");return Name;}
-function SetPoints(){Points;return Points;}
-function SetLevel(){Level; return Level}
-function SetTime(){Time; return Time}
-
-function exibirDados(){
-        continueMusic.pause();
-        continueMusic.currentTime = 0;
-        gameOver.play();
-
-    Jogadores.push (new Pessoa());//Adicionando Pessoas ao array Jogadores
-    
+function printData(){
+    continueMusic.pause();
+    gameOver.play();
+    continueMusic.currentTime = 0;
+    players.push (new Pessoa());//Adicionando Pessoas ao array Jogadores
     //Funcao para ordenar o Vetor de jogadores a partir da maior pontução
-    Jogadores.sort((a, b) => (a.Points < b.Points) ? 1 : -1)
-
+    players.sort((a, b) => (a.points < b.points) ? 1 : -1)
     document.getElementById("dados").innerHTML = ""; //Limpa o campo dados antes de imprimir a lista 
-
     //Item Percorre a quantidade de jogadores imprimindo no html
-    Jogadores.forEach(item => {
-        document.getElementById("dados").innerHTML +=
-        '<li><b>Name: </b>'+item.Name +
-        '<b> Points: </b>'+item.Points+
-        '<br><b> Level: </b>'+item.Level +
-        '<b> Time: </b>'+item.Time+
-        '</li>';//Adicionar ponto aqu
-    });
-
+    players.forEach(item => {
+    document.getElementById("dados").innerHTML +=
+    '<li><b>Name: </b>'+item.name +
+    '<b> points: </b>'+item.points+
+    '<br><b> level: </b>'+item.level +
+    '<b> Time: </b>'+item.time+
+    '</li>';//Adicionar ponto aqu
+});
     return false;
 } 
 
@@ -665,32 +638,4 @@ function instructWindow(){
             paused = 0;
         }
     }
-}
-
-function instructWindow(){
-    if(activeInstruction == false){
-        document.getElementById("instructions").style.display = "block";
-        document.getElementById("button").disabled = true;
-        document.getElementById("button").style.cursor = "not-allowed";
-        activeInstruction = true;
-        if(paused == 1){
-            return true;
-        }
-        else{
-            paused = 1;
-        }
-    }
-    else{
-        document.getElementById("instructions").style.display = "none";
-        document.getElementById("button").disabled = false;
-        document.getElementById("button").style.cursor = "pointer";
-        activeInstruction = false;
-        if(document.getElementById("button").textContent == "Continue game"){
-            return false;
-        }
-        else{
-            paused = 0;
-        }
-    }
-    
 }
