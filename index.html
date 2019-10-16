@@ -17,8 +17,9 @@
     <section>
         <button id="button" onclick="pauseGame()">Pause game</button>
         <button id="button2" onclick="startGame()">Restart game</button>
-        <canvas id="Matriz">
-        </canvas>
+        <button id="button3" onclick="instructWindow()">Instructions</button>
+        <canvas id="Matriz"></canvas>
+        
         <div id="next">
             <div class="title">
                     <h3>Next Piece</h3>
@@ -59,10 +60,38 @@
             </ul>
         </div>
     </div>
-
+    
 <div id="dados"></div>
-
+<div id="instructions">
+    <h2>Instructions</h2>
+    <div class="key">
+        <img src="img/up-key.png">
+        <p>Move piece foward</p>
+    </div>
+    <div class="key">
+        <img src="img/left-key.png">
+        <p>Move piece to the left</p>
+    </div>
+    <div class="key">
+        <img src="img/right-key.png">
+        <p>Move piece to the right</p>
+    </div>
+    <div class="key">
+        <img src="img/down-key.png">
+        <p>Rotate piece</p>
+    </div>
+    <div class="key">
+        <img src="img/c-key.png">
+        <p>Hold piece to use it later</p>
+    </div>
+    <div class="key">
+        <img src="img/p-key.png">
+        <p>Pause/unpause game</p>
+    </div>
+    <button id="button4" onclick="instructWindow()">Ok</button>
+</div>
 <script src="Tetris.js"></script>
+</section>
 </body>
 </html>
 
