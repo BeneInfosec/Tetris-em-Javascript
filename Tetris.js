@@ -24,6 +24,11 @@ var peca_proxima = (Math.floor(Math.random()*6)+1);
 var seconds=0;
 document.getElementById("button2").disabled = true;
 
+//variaveis do hold piece
+var holdedPiece;
+var checkHolded=false;
+
+
 //Criando a Matriz base
              //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
 const L = [ [ [0,0,1],[1,1,1],[0,0,0]],[ [1,0,0],[1,0,0],[1,1,0]],[ [1,1,1],[1,0,0],[0,0,0]],[ [0,1,1],[0,0,1],[0,0,1]]]; //L normal
@@ -192,31 +197,26 @@ function startGame(){
 }
 //startGame();
 
-
 function tickMovimentation() { //Função para a movimentação constante da peça
-    if(paused == 1){
-        return false;
-    }
-    else{
-        if(checkColision(-1, 0, pecaAtual.GoTetramino)){
-            drawPieceOnBoard();
-            pecaAtual = proximaPeca;
-            proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
-            if(checkGameOver()){
-                return false;
-            }
-            else{
-                drawPiece(pecaAtual);
-                drawPiece_1(proximaPeca);
-            }
+    if(checkColision(-1, 0, pecaAtual.GoTetramino)){
+        drawPieceOnBoard();
+        pecaAtual = proximaPeca;
+        proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
+        if(checkGameOver()){
+            return false;
         }
         else{
-            deletePiece(); //apagar peça antes de mover
-            pecaAtual.linha--; //sobe a peça
-            drawPiece(); //desenha a peça no lugar novo
+            drawPiece(pecaAtual);
+            drawPiece_1(proximaPeca);
         }
-    } 
+    }
+    else{
+        deletePiece(); //apagar peça antes de mover
+        pecaAtual.linha--; //sobe a peça
+        drawPiece(); //desenha a peça no lugar novo
+    }
 }
+
 
 document.onkeydown = function(event) { //função para detectar as setas do teclado que sao pressionadas
     if(gameState == 1){
@@ -239,9 +239,71 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
         case 40: //se for a seta para baixo
                 rotatePiece();
             break;
+        case 67: //se clicar no C
+                holdedPiece_1();
+            break; 
         }
     }
 };
+
+function drawPiece_2(proxima){
+    var next = document.getElementById('hold-canvas');
+    next.width = 150;
+    next.height = 100;
+    var bloquinhos = next.getContext("2d");
+    for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
+            if(proxima.GoTetramino[linha1][coluna1] == 1){
+                bloquinhos.fillStyle = proxima.cor ; //Define a cor do bloco gerado
+                bloquinhos.fillRect(coluna1*20, linha1*20, 20, 20);//Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                bloquinhos.strokeRect(coluna1*20, linha1*20, 20, 20);
+            }
+        }
+    }  
+}
+
+function deletePiece_2(proxima){
+    var next = document.getElementById('hold-canvas');
+    next.width = 150;
+    next.height = 100;
+    var bloquinhos = next.getContext("2d");
+    for (let linha1 = 0; linha1 < proxima.GoTetramino.length ;  linha1++) { //conta o tamanho (3x3) ou (4x4)
+        //(coluna+ColunaInicial) < (ColunaInicial+TamanhoDaPeca)
+        for (let coluna1 = 0; coluna1 < proxima.GoTetramino.length ; coluna1++) {
+            if(proxima.GoTetramino[linha1][coluna1] == 1){
+                    bloquinhos.fillStyle = EMPTY_SQ; //Define a cor do bloco gerado
+                    bloquinhos.strokeStyle = EMPTY_SQ;
+                    bloquinhos.fillRect(coluna1*20, linha1*20, 20, 20); //Linha*tamDoBloco,Coluna*TamDoBloco, TamDoBloco,TamDoBloco
+                    bloquinhos.strokeRect(coluna1*20, linha1*20, 20, 20);
+                }
+            }
+        }
+    }
+
+
+function holdedPiece_1(){
+
+    if(checkHolded == false){
+        holdedPiece = pecaAtual;
+        deletePiece();
+        drawPiece_2(holdedPiece);
+        pecaAtual = proximaPeca;
+        proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
+        drawPiece_1(proximaPeca);
+        drawPiece();
+        checkHolded = true;
+    }
+
+    else{
+        deletePiece();
+        pecaAtual = holdedPiece;
+        deletePiece_2(holdedPiece);
+        drawPiece();
+        checkHolded = false;
+    }
+
+}
 
 function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da peça
     if(arrow == 37)
@@ -274,12 +336,8 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPieceOnBoard();
             pecaAtual = proximaPeca;
             proximaPeca = peca_aleatoria((Math.floor(Math.random()*6)+1));
-            if(checkGameOver()){
-                return false;
-            }
-            else{
-                drawPiece_1(proximaPeca);
-            }
+            checkGameOver();
+            drawPiece_1(proximaPeca);
             return false;
 
         }
@@ -303,6 +361,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPiece();
         }
     }
+    
 }
 
 function checkColision(r, c, futurePiece){
