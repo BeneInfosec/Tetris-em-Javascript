@@ -249,6 +249,7 @@ ul {
       display: none;
       border-style: solid;
       border-color: black;
+      box-shadow: 10px 10px 10px #999;
 }
 #instructions > h2{
       text-align: center;
