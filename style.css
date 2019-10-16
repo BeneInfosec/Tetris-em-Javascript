@@ -3,15 +3,14 @@ body {
        height: 100%;
        width: 80%;
        margin-right: 10%;
-       margin-left: 10%;
-       margin-right: 10%;
      }
 
 header {
       background-color:'white';
       width: 100%;
-      height: 100px;
+      height: 100%;
       margin-top: -10px;
+      margin-left: 10%;
       }
 
    h1 {
@@ -26,14 +25,14 @@ header {
       }
 #Matriz{
       position: absolute;
-      top: 150px;
-      left: 41%;
-      box-shadow: 15px 15px 10px #458B74;  
+      margin-top: 20px;
+      margin-left: 41%;
+      box-shadow: 15px 15px 10px #458B74;
 }
 
 #next{
-      margin-top: 145px;
-      margin-left: 10%;
+      margin-top: 20px;
+      margin-left: 20%;
       height: 200px;
       width: 250px;
       background: #eeeeee;
@@ -41,8 +40,8 @@ header {
       box-shadow: 15px 15px 10px #458B74;
 }
 #score{
-      margin-top: 390px;
-      margin-left: 10%;
+      margin-top: 265px;
+      margin-left: 20%;
       height: 250px;
       width: 250px;
       background: #eeeeee;
@@ -51,8 +50,8 @@ header {
 }
 
 #hold{
-      margin-top: 145px;
-      margin-left: 52%;
+      margin-top: 20px;
+      margin-left: 62%;
       height: 200px;
       width: 250px;
       background: #eeeeee;
@@ -61,8 +60,8 @@ header {
 }
 
 #rank{
-      margin-top: 390px;
-      margin-left: 52%;
+      margin-top: 265px;
+      margin-left: 62%;
       height: 250px;
       width: 250px;
       background: #eeeeee;
@@ -129,3 +128,64 @@ ul {
       font-family: cursive;
       text-align: center;
 }
+
+#logo{
+      width: 100%;
+}
+#tetris-logo{
+      text-align: center;
+      margin-left: 37%;
+      height: 100px;
+      width: 350px;
+}
+#button {
+      padding: 15px 25px;
+      font-size: 15px;
+      text-align: center;
+      cursor: pointer;
+      outline: none;
+      color: #fff;
+      background-color: #458B74;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #999;
+      margin-top: 20px;
+      position: absolute;
+      margin-left: 8%;
+}
+    
+#button:hover {
+      background-color: #4A708B;
+}
+    
+#button:active {
+      background-color: #4A708B;
+      box-shadow: 0 5px #999;
+      transform: translateY(4px);
+}
+#button2 {
+      padding: 15px 25px;
+      font-size: 15px;
+      text-align: center;
+      cursor: not-allowed;
+      outline: none;
+      color: #fff;
+      background-color: #458B74;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #999;
+      margin-top: 90px;
+      position: absolute;
+      margin-left: 8%;
+}
+    
+#button2:hover {
+      background-color: #4A708B;
+}
+    
+#button2:active {
+      background-color: #4A708B;
+      box-shadow: 0 5px #999;
+      transform: translateY(4px);
+}
+
