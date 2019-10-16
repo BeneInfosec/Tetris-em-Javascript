@@ -1,5 +1,6 @@
-var NCOL= prompt ("Digite a largura do tabuleiro (MAX: 22)");//Quantidade de colunas da matriL base
-var NLIN= prompt ("Digite a altura do tabuleiro (MAX: 44)");//Quantidade de linhas da matriL base
+
+var NCOL= prompt ("Digite a largura do tabuleiro ");//Quantidade de colunas da matriL base
+var NLIN= prompt ("Digite a altura do tabuleiro");//Quantidade de linhas da matriL base
 
 var Jogadores = [];//Criando diversos jogadores com o construtor Pessoa
 
@@ -23,8 +24,14 @@ var Points=0;
 var controlSpeed = 0;
 var Level = 1;
 var paused = 0;
-var peca_proxima = (Math.floor(Math.random()*6)+1);
+var pecaProxima = (Math.floor(Math.random()*6)+1);
 var seconds=0;
+var haveHoldedPiece = false;
+var gameOver = new Audio('smb_gameover (online-audio-converter.com).mp3');
+var up = new Audio('smb_1-up (online-audio-converter.com).mp3');
+var levelUp = new Audio ('smb_warning (online-audio-converter.com).mp3');
+var continueMusic = new Audio('y2mate.com - sonic_the_hedgehog_ost_green_hill_zone_G-i8HYi1QH0.mp3');
+//Final
 document.getElementById("button2").disabled = true;
 var activeInstruction = false;
 
@@ -43,14 +50,11 @@ for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
         base[linha][coluna] = EMPTY_SQ;
     }
 }
-var tem = false;
+continueMusic.play();
 
-var gameover = new Audio('smb_gameover (online-audio-converter.com).mp3');
-var up = new Audio('smb_1-up (online-audio-converter.com).mp3');
-var level_up = new Audio ('smb_warning (online-audio-converter.com).mp3');
 
-class Peca{
-    constructor(Tetramino,cor)
+class Peca{ 
+    constructor(Tetramino,cor) //construtor da peça
     {
         this.Tetramino=Tetramino;
         this.TetraminoN=0;//Mostra a posicao inicial do bloco (no caso L[0])
@@ -68,9 +72,8 @@ class Peca{
     }
 }
 
-let checkGameOver = () => {
+let checkGameOver = () => { 
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
-        gameover.play();
         exibirDados();
         gameState = 1;
         clearInterval(intervalo);
@@ -185,13 +188,14 @@ function drawPiece_1(proxima){
     }  
 }
 
-pecaAtual = peca_aleatoria(peca_proxima);
-peca_proxima = (Math.floor(Math.random()*6)+1);
-proximaPeca = peca_aleatoria(peca_proxima);
+pecaAtual = peca_aleatoria(pecaProxima);
+pecaProxima = (Math.floor(Math.random()*6)+1);
+proximaPeca = peca_aleatoria(pecaProxima);
 drawPiece_1(proximaPeca);
 drawPiece(pecaAtual);
 
 function startGame(){
+    continueMusic.play()
     for (linha = 0 ;linha < NLIN ; linha++){ //Gera linhas
         base[linha]= [];
         for(coluna = 0; coluna < NCOL ;coluna++){//Gera colunas
@@ -202,10 +206,10 @@ function startGame(){
 
     document.getElementById("button2").disabled = true;
     document.getElementById("button2").style.cursor = "not-allowed";
-    pecaAtual = peca_aleatoria(peca_proxima);
-    peca_proxima = (Math.floor(Math.random()*6)+1);
-    proximaPeca = peca_aleatoria(peca_proxima);
-    if(tem == true){
+    pecaAtual = peca_aleatoria(pecaProxima);
+    pecaProxima = (Math.floor(Math.random()*6)+1);
+    proximaPeca = peca_aleatoria(pecaProxima);
+    if(haveHoldedPiece == true){
         deletePiece_2(holdedPiece);
     }
     drawPiece_1(proximaPeca);
@@ -221,7 +225,7 @@ function startGame(){
     display = "Level: " + Level.toString();
     document.getElementById("Level").innerHTML = display;  
     paused = 0;
-    peca_proxima = (Math.floor(Math.random()*6)+1);
+    pecaProxima = (Math.floor(Math.random()*6)+1);
     seconds=0;
     gameState = 0;
     gameSpeed = 1000;
@@ -248,9 +252,11 @@ function drawPiece_2(proxima){
 
 function tickMovimentation() { //Função para a movimentação constante da peça
     if(paused == 1){
+        continueMusic.pause();
         return false;
     }
     else{
+        continueMusic.play();
         if(checkColision(-1, 0, pecaAtual.GoTetramino)){
             drawPieceOnBoard();
             pecaAtual = proximaPeca;
@@ -293,8 +299,8 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
                 rotatePiece();
             break;
         case 67:
-        		var arrow = 67;
-        		arrowMovimentation(arrow);
+                var arrow = 67;
+                arrowMovimentation(arrow);
         break;
         case 80:
                 var arrow = 80;
@@ -367,24 +373,24 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
     }
     else
     if(arrow == 67){
-    	if(tem == true){
+        if(haveHoldedPiece == true){
             deletePiece_2(holdedPiece);
-    		deletePiece();
-    		pecaAtual= holdedPiece;
-    		drawPiece(pecaAtual);
-    		tem = false;
-    	}
-    	else{
-    		holdedPiece = pecaAtual;
-    		deletePiece();
-    		drawPiece_2(holdedPiece);
-    		pecaAtual = proximaPeca;
-    		peca_proxima = (Math.floor(Math.random()*6)+1);
-            proximaPeca = peca_aleatoria(peca_proxima);
+            deletePiece();
+            pecaAtual= holdedPiece;
+            drawPiece(pecaAtual);
+            haveHoldedPiece = false;
+        }
+        else{
+            holdedPiece = pecaAtual;
+            deletePiece();
+            drawPiece_2(holdedPiece);
+            pecaAtual = proximaPeca;
+            pecaProxima = (Math.floor(Math.random()*6)+1);
+            proximaPeca = peca_aleatoria(pecaProxima);
             drawPiece_1(proximaPeca);
             drawPiece(pecaAtual);
-            tem = true;
-    	}
+            haveHoldedPiece = true;
+        }
     }
     else
     if(arrow == 80){
@@ -468,19 +474,24 @@ function verificalinha(){
         var display = "Points: " + Points.toString();
         document.getElementById("Points").innerHTML = display;
         controlSpeed += (rowsSequence*10)*rowsSequence;
-        if(controlSpeed/200 > 1){
-        	level_up.play();
-            up.pause();//pausar o up
-        	up.currentTime = 0; //setar o up para 0
-            Level++;
-            var display = "Level: " + Level.toString();
-            document.getElementById("Level").innerHTML = display;        
-            gameSpeed =  Math.floor(gameSpeed*0.5);
-            controlSpeed -= 200;
-            clearInterval(intervalo);
-            intervalo = setInterval(tickMovimentation, gameSpeed);
+        if(controlSpeed/200 >= 1){
+        	continueMusic.pause();
+          levelUp.play();
+          up.pause();//pausar o up
+          up.currentTime = 0; //setar o up para 0
+          Level++;
+          var display = "Level: " + Level.toString();
+          document.getElementById("Level").innerHTML = display;        
+          gameSpeed =  Math.floor(gameSpeed*0.5);
+          controlSpeed -= 200;
+          clearInterval(intervalo);
+          intervalo = setInterval(tickMovimentation, gameSpeed);
+          continueMusic.pause();
+          continueMusic.currentTime = 0;
         }
+
     }
+   
 }
 
 function rotatePiece(){
@@ -519,10 +530,12 @@ function gameTime(){
 }
 
 function eliminatedRows(){
-	up.play();
+    continueMusic.pause();
+    up.play();
     rowscount++;
     var display = "Eliminated rows: " + rowscount.toString();
     document.getElementById("rows").innerHTML = display;
+    continueMusic.play();
 }
 /*Funcao para o ranking */
 var Points;
@@ -548,6 +561,9 @@ function SetLevel(){Level; return Level}
 function SetTime(){Time; return Time}
 
 function exibirDados(){
+        continueMusic.pause();
+        continueMusic.currentTime = 0;
+        gameOver.play();
 
     Jogadores.push (new Pessoa());//Adicionando Pessoas ao array Jogadores
     
