@@ -67,6 +67,7 @@ header {
       background: #eeeeee;
       position: absolute;
       box-shadow: 15px 15px 10px #458B74;
+      overflow-y: auto;
 }
 
 .title{
@@ -99,7 +100,6 @@ ul {
       list-style-type: none;
   }
   li {
-      background: url(bullet.gif) no-repeat 0 50%;
       align-content: center;
       border: 1px;
       border-style: dashed;
