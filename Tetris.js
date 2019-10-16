@@ -26,6 +26,7 @@ var paused = 0;
 var peca_proxima = (Math.floor(Math.random()*6)+1);
 var seconds=0;
 document.getElementById("button2").disabled = true;
+var activeInstruction = false;
 
 //Criando a Matriz base
              //L[0]                     L[1] = posição girada 90 >    L[2] posição girada 180 >  L[3] posição girada 270 > 
@@ -69,8 +70,8 @@ class Peca{
 
 let checkGameOver = () => {
     if(checkColision(0, 0, pecaAtual.GoTetramino)){
+        gameover.play();
         exibirDados();
-    	  gameover.play();
         gameState = 1;
         clearInterval(intervalo);
         document.getElementById("button2").disabled = false;
@@ -295,6 +296,9 @@ document.onkeydown = function(event) { //função para detectar as setas do tecl
         		var arrow = 67;
         		arrowMovimentation(arrow);
         break;
+        case 80:
+                var arrow = 80;
+                arrowMovimentation(arrow);
 
         }
     }
@@ -346,6 +350,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPiece();
         }
     }
+    else
     if(arrow == 40) //Funcao para girar a peca
     {
         if (pecaAtual.TetraminoN > 3)//reseta o vetor
@@ -360,6 +365,7 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             drawPiece();
         }
     }
+    else
     if(arrow == 67){
     	if(tem == true){
             deletePiece_2(holdedPiece);
@@ -380,7 +386,10 @@ function arrowMovimentation(arrow){ // funcao de movimentaçao horizontal da pe�
             tem = true;
     	}
     }
-
+    else
+    if(arrow == 80){
+        pauseGame();
+    }
 }
 
 function checkColision(r, c, futurePiece){
@@ -459,15 +468,15 @@ function verificalinha(){
         var display = "Points: " + Points.toString();
         document.getElementById("Points").innerHTML = display;
         controlSpeed += (rowsSequence*10)*rowsSequence;
-        if(controlSpeed/500 > 1){
-        	  level_up.play();
+        if(controlSpeed/200 > 1){
+        	level_up.play();
             up.pause();//pausar o up
-        	  up.currentTime = 0; //setar o up para 0
+        	up.currentTime = 0; //setar o up para 0
             Level++;
             var display = "Level: " + Level.toString();
             document.getElementById("Level").innerHTML = display;        
             gameSpeed =  Math.floor(gameSpeed*0.5);
-            controlSpeed -= 500;
+            controlSpeed -= 200;
             clearInterval(intervalo);
             intervalo = setInterval(tickMovimentation, gameSpeed);
         }
@@ -563,8 +572,38 @@ function exibirDados(){
 function pauseGame(){
     if(paused == 1){
         paused = 0;
+        document.getElementById("button").innerHTML = "Pause game";
     }
     else{
         paused = 1;
+        document.getElementById("button").innerHTML = "Continue game";
     }
+}
+
+function instructWindow(){
+    if(activeInstruction == false){
+        document.getElementById("instructions").style.display = "block";
+        document.getElementById("button").disabled = true;
+        document.getElementById("button").style.cursor = "not-allowed";
+        activeInstruction = true;
+        if(paused == 1){
+            return true;
+        }
+        else{
+            paused = 1;
+        }
+    }
+    else{
+        document.getElementById("instructions").style.display = "none";
+        document.getElementById("button").disabled = false;
+        document.getElementById("button").style.cursor = "pointer";
+        activeInstruction = false;
+        if(document.getElementById("button").textContent == "Continue game"){
+            return false;
+        }
+        else{
+            paused = 0;
+        }
+    }
+    
 }

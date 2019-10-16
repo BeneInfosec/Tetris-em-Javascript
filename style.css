@@ -188,4 +188,89 @@ ul {
       box-shadow: 0 5px #999;
       transform: translateY(4px);
 }
+#button3 {
+      padding: 15px 25px;
+      font-size: 15px;
+      text-align: center;
+      cursor: pointer;
+      outline: none;
+      color: #fff;
+      background-color: #458B74;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #999;
+      margin-top: 160px;
+      position: absolute;
+      margin-left: 8%;
+}
+    
+#button3:hover {
+      background-color: #4A708B;
+}
+    
+#button3:active {
+      background-color: #4A708B;
+      box-shadow: 0 5px #999;
+      transform: translateY(4px);
+}
+#button4 {
+      padding: 15px 25px;
+      font-size: 15px;
+      text-align: center;
+      cursor: pointer;
+      outline: none;
+      color: #fff;
+      background-color: #458B74;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #999;
+      margin-left: 160px;
+      margin-top: 40px;
+}
+    
+#button4:hover {
+      background-color: #4A708B;
+}
+    
+#button4:active {
+      background-color: #4A708B;
+      box-shadow: 0 5px #999;
+      transform: translateY(4px);
+}
 
+#instructions{
+      height: 400px;
+      width: 400px;
+      border-radius: 5%;
+      background: #76EEC6;
+      position: absolute;
+      margin-left: 35%;
+      margin-top: 3%;
+      display: none;
+      border-style: solid;
+      border-color: black;
+}
+#instructions > h2{
+      text-align: center;
+      font-family: cursive;
+      margin-bottom: 25px;
+}
+#instructions > .key{
+      margin-left: 10px;
+      margin-top: 10px;
+      width: 47%;
+      height: 55px;
+      float: left;
+}
+.key > img{
+      width: 50px;
+      height: 50px;
+      float: left;
+}
+.key > p{
+      font-family: cursive;
+      margin-left: 5px;
+      text-align: center;
+      vertical-align: middle;
+      margin-top: -1px;
+}
