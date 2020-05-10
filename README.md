@@ -35,5 +35,5 @@ Para ilustrar o funcionamento do jogo, a Figura 1 exibe um tabuleiro de uma vers
 * Há também instruções, que quando selecionadas, pausam o jogo mostrando os possiveis comandos de ação.
 
 ## Disponivel para jogar na IBM Cloud:
-tetriscloud.apic.mybluemix.net
+* tetriscloud.apic.mybluemix.net
 
